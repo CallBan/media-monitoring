@@ -1,7 +1,7 @@
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import SystemMessage
 from langchain_gigachat.chat_models import GigaChat
-import os
 import time
+
 
 class GigaChatApi:
     def __init__(self, api):
@@ -20,7 +20,7 @@ class GigaChatApi:
                 """
         messages = [
             SystemMessage(
-                content = prompt
+                content=prompt
             )
         ]
         print("Передача текста в модель")
@@ -30,7 +30,3 @@ class GigaChatApi:
         finish = time.time()
         print(f"Время генерации ответа: {finish - start}")
         return summary
-
-
-
-

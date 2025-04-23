@@ -1,18 +1,17 @@
 from selenium import webdriver
-from backend.llm import llm_model
-from backend.switch import switch
+from llm import llm_model
+from parser.switch import switch
 import os
 
-date_range = ['2025-04-22', '2025-04-22']
-sources = ['banki-ru']
+
 class Main:
-    def __init__(self, sources, date_range, keywords = None):
+    def __init__(self, sources, date_range):
         giga_chat_api = os.environ.get('API_GIGA_CHAT')
         print(giga_chat_api)
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
         driver = webdriver.Chrome()
-        self.news_pages = [] # Массив для обработки страниц из различных источников
+        self.news_pages = []  # Массив для обработки страниц из различных источников
         for source in sources:
             url_class = switch(source)
             url, class_parser = url_class[0], url_class[1]
@@ -31,8 +30,6 @@ class Main:
             print(f"Текст: {item['content'][:200]}...")
             print(f"Дата публикации: {item['date_publication']}")
 
-
-
         # for news_one_source in self.news_pages:
         #     for item in news_one_source:
         #         item['Дата публикации'] = item.pop('date_publication')
@@ -43,6 +40,3 @@ class Main:
         #         item['Ссылка'] = item.pop('url')
         #         del item['content']  # Можно удалить, если не нужно в таблице
         #     save_excel = excel_generation.ExcelGeneration(news_one_source, 'news3.xlsx')
-
-
-
