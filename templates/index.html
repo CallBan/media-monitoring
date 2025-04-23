@@ -49,5 +49,24 @@
       </div>
     </div>
   </form>
+
+  <div id="results">
+  {% if news %}
+    <h2 class="mt-4 text-white">Результаты поиска</h2>
+    <ul class="list-group">
+      {% for item in news %}
+        <li class="list-group-item">
+          <h5><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></h5>
+          <p class="mb-1"><strong>Дата публикации:</strong> {{ item.date_publication }}</p>
+          <p class="mb-0">{{ item.content[:300] }}...</p>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">Пока нет результатов.</p>
+  {% endif %}
+</div>
+
+
 </div>
 {% endblock %}
