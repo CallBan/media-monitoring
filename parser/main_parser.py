@@ -9,7 +9,6 @@ class Main:
         giga_chat_api = os.environ.get('API_GIGA_CHAT')
         print(giga_chat_api)
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
-        date_range = date_range.split(' to ')
         driver = webdriver.Chrome()
 
         self.news_pages = []  # Массив для обработки страниц из различных источников

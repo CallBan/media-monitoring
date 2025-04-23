@@ -15,10 +15,18 @@ class BankiRuParser:
         self.TIMEOUT = 0.2
         self.news = []
 
-        self.date_start = datetime.strptime(
-            date_range[0].strip(), "%Y-%m-%d").date()
-        self.date_end = datetime.strptime(
-            date_range[1].strip(), "%Y-%m-%d").date()
+        try:
+            if ' to ' in date_range:
+                start_str, end_str = date_range.split(' to ')
+                self.date_start = datetime.strptime(start_str.strip(), "%Y-%m-%d").date()
+                self.date_end = datetime.strptime(end_str.strip(), "%Y-%m-%d").date()
+            else:
+                single_date = datetime.strptime(date_range.strip(), "%Y-%m-%d").date()
+                self.date_start = self.date_end = single_date
+        except Exception as e:
+            print(f"Ошибка разбора даты: {e}")
+            today = datetime.today().date()
+            self.date_start = self.date_end = today
 
         self.pattern_lenta = re.compile(r'/news/lenta/\?id')
         self.pattern_key_words = None
@@ -29,7 +37,10 @@ class BankiRuParser:
         self.urls = []
 
     def urls_list(self):
-        for page_num in range(1, self.count_pages + 1):
+        flag_break = False
+        page_num = 0
+        while not flag_break:
+
             time.sleep(self.TIMEOUT)
 
             soup = BeautifulSoup(self.driver.page_source, 'html.parser')
@@ -50,7 +61,12 @@ class BankiRuParser:
                     # Пропускаем новости вне диапазона
                     if not (self.date_start <= news_date <= self.date_end):
                         print(f"Пропускаем блок вне диапазона: {news_date}")
+                        print(f"Старт {self.date_start}, Конец {self.date_end}, Текущая {news_date}")
+                        if self.date_start > news_date:
+                            flag_break = True
+                            break
                         continue
+
 
                     # Извлекаем ссылки на новости из этого блока
                     for link in block.find_all('a', class_='NewsItemstyled__StyledItemTitle-sc-jjc7yr-7'):
@@ -77,7 +93,7 @@ class BankiRuParser:
             except WebDriverException as e:
                 print(f"Не удалось загрузить страницу {next_page}: {e}")
                 break
-
+            page_num += 1
         return self.urls
 
     def parse_news_page(self, url):
@@ -100,7 +116,7 @@ class BankiRuParser:
 
     def news_page(self):
         news_urls = self.urls_list()
-        for url in news_urls[:2]:
+        for url in news_urls:
             try:
                 title, content, date_publication = self.parse_news_page(url)
                 self.news.append({
