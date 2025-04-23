@@ -17,7 +17,8 @@ class ExcelGeneration:
         ws = wb.active
 
         header_font = Font(bold=True)
-        header_alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        header_alignment = Alignment(
+            horizontal="center", vertical="center", wrap_text=True)
 
         # Дефолтные ширины колонок (можно по номеру или по заголовку)
         default_widths = {
@@ -34,10 +35,13 @@ class ExcelGeneration:
 
             # Применяем дефолтную ширину или авторасчёт
             if col_idx in default_widths:
-                ws.column_dimensions[get_column_letter(col_idx)].width = default_widths[col_idx]
+                ws.column_dimensions[get_column_letter(
+                    col_idx)].width = default_widths[col_idx]
             else:
-                max_length = max(len(str(c.value)) if c.value else 0 for c in ws[get_column_letter(col_idx)])
-                ws.column_dimensions[get_column_letter(col_idx)].width = max_length + 5
+                max_length = max(
+                    len(str(c.value)) if c.value else 0 for c in ws[get_column_letter(col_idx)])
+                ws.column_dimensions[get_column_letter(
+                    col_idx)].width = max_length + 5
 
         center_align = Alignment(vertical="top", wrap_text=True)
         for row in ws.iter_rows(min_row=2):
