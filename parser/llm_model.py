@@ -1,0 +1,36 @@
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_gigachat.chat_models import GigaChat
+import os
+import time
+
+class GigaChatApi:
+    def __init__(self, api):
+
+        self.giga = GigaChat(
+            # Для авторизации запросов используйте ключ, полученный в проекте GigaChat API
+            credentials=api,
+            verify_ssl_certs=False,
+        )
+
+    def take_answer(self, text_page):
+        start = time.time()
+        prompt = f"""
+                Ты должен сделать небольшое summary по прочитанному тексту
+                Вот текст: {text_page}
+                """
+        messages = [
+            SystemMessage(
+                content = prompt
+            )
+        ]
+        print("Передача текста в модель")
+        res = self.giga.invoke(messages)
+        messages.append(res)
+        summary = res.content
+        finish = time.time()
+        print(f"Время генерации ответа: {finish - start}")
+        return summary
+
+
+
+
