@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-class LentaParser:
+class BankiRuParser:
     def __init__(self, url, driver, date_range, key_words=None, count_pages=5):
         self.url = url
         self.driver = driver
@@ -16,8 +16,8 @@ class LentaParser:
         self.TIMEOUT = 0.2
         self.news = []
 
-        self.date_start = datetime.strptime(date_range[0], "%Y-%m-%d").date()
-        self.date_end = datetime.strptime(date_range[1], "%Y-%m-%d").date()
+        self.date_start = datetime.strptime(date_range[0].strip(), "%Y-%m-%d").date()
+        self.date_end = datetime.strptime(date_range[1].strip(), "%Y-%m-%d").date()
 
         self.pattern_lenta = re.compile(r'/news/lenta/\?id')
         self.pattern_key_words = None

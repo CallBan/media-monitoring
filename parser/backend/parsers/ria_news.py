@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-class LentaParser:
+class RIAParser:
     def __init__(self, url, driver, date_range, key_words=None, count_pages=5):
         self.url = url
         self.driver = driver

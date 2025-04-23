@@ -1,6 +1,8 @@
-{% extends "layout.html" %} {% block content %}
+{% extends "layout.html" %}
+
+{% block content %}
 <div class="search-container">
-  <form id="searchForm" class="search-form">
+  <form id="searchForm" class="search-form" method="POST" action="{{ url_for('start_parsing') }}">
     <!-- Ключевые слова -->
     <div class="form-group">
       <label for="keywords" class="form-label">Ключевые слова</label>
@@ -18,7 +20,7 @@
       <div class="form-group">
         <label class="form-label">Источники</label>
         <div class="select-wrapper">
-          <select id="sources" multiple class="form-select">
+          <select id="sources" name="sources" multiple class="form-select">
             {% for source in news_sources %}
             <option value="{{ source['id'] }}">{{ source['name'] }}</option>
             {% endfor %}
@@ -39,8 +41,7 @@
       </div>
 
       <!-- Кнопка -->
-      <div class="form-group">
-        <label class="form-label hidden-label">&nbsp;</label>
+      <div class="form-group mt-3">
         <button type="submit" class="btn btn-primary">Найти</button>
       </div>
     </div>
