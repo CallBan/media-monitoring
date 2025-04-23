@@ -5,24 +5,28 @@ import os
 
 
 class Main:
-    def __init__(self, sources, date_range):
+    def __init__(self, sources, date_range, keywords = None):
         giga_chat_api = os.environ.get('API_GIGA_CHAT')
         print(giga_chat_api)
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
-
+        date_range = date_range.split(' to ')
         driver = webdriver.Chrome()
+
         self.news_pages = []  # Массив для обработки страниц из различных источников
         for source in sources:
             url_class = switch(source)
-            url, class_parser = url_class[0], url_class[1]
+            url, class_parser = url_class['url'], url_class['class_link']
 
             self.bank = class_parser(url, driver, date_range=date_range)
             self.news_pages.extend(self.bank.news_page())
 
-        self.__process_parsing()
+        self.__print_news_tittles()
 
-    def __process_parsing(self):
+    def get_list_news(self):
+        return self.news_pages
 
+
+    def __print_news_tittles(self):
         for idx, item in enumerate(self.news_pages, 1):
             print(f"\nНовость #{idx}:")
             print(f"Заголовок: {item['title']}")
@@ -40,3 +44,7 @@ class Main:
         #         item['Ссылка'] = item.pop('url')
         #         del item['content']  # Можно удалить, если не нужно в таблице
         #     save_excel = excel_generation.ExcelGeneration(news_one_source, 'news3.xlsx')
+
+# sources = ['banki.ru']
+# date_range = ['2025-04-22', '2025-04-23']
+# main = Main(sources=sources, date_range=date_range)

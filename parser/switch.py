@@ -1,9 +1,13 @@
 from parser.parsers import ria_news, tass_news, banki_ru_news
 
-dict_sources = {'ria': ['https://ria.ru/economy/', ria_news.RIAParser],
-                'tass': ['https://tass.com/', tass_news.TASSParser],
-                'banki-ru': ['https://www.banki.ru/news/lenta/', banki_ru_news.BankiRuParser]}
+def get_sources():
+    return [
+        {'id': 'ria', 'url': 'https://ria.ru/economy/', 'name': 'РИА Новости', 'class_link': ria_news.RIAParser},
+        {'id': 'tass', 'url': 'https://tass.com/', 'name': 'ТАСС', 'class_link': tass_news.TASSParser},
+        {'id': 'banki-ru', 'url': 'https://www.banki.ru/news/lenta/', 'name': 'Banki.ru',
+         'class_link': banki_ru_news.BankiRuParser},
+    ]
 
 
-def switch(source):
-    return dict_sources[source]
+def switch(source_id):
+    return next((item for item in get_sources() if item['id'] == source_id), None)
