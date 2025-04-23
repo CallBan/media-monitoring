@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="search-container">
+  <form id="searchForm" class="search-form" method="POST" action="{{ url_for('start_parsing') }}">
+    <!-- Ключевые слова -->
+    <div class="form-group">
+      <label for="keywords" class="form-label">Ключевые слова</label>
+      <input
+        type="text"
+        id="keywords"
+        name="keywords"
+        class="form-input"
+        placeholder="Введите слова через запятую (пример: строительство, налоги, инкассация)"
+      />
+    </div>
+
+    <div class="form-row">
+      <!-- Источники -->
+      <div class="form-group">
+        <label class="form-label">Источники</label>
+        <div class="select-wrapper">
+          <select id="sources" name="sources" multiple class="form-select">
+            {% for source in news_sources %}
+            <option value="{{ source['id'] }}">{{ source['name'] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <!-- Календарь -->
+      <div class="form-group">
+        <label for="dateRange" class="form-label">Период</label>
+        <input
+          type="text"
+          id="dateRange"
+          class="form-control"
+          placeholder="Выберите период"
+          name="date_range"
+        />
+      </div>
+
+      <!-- Кнопка -->
+      <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary">Найти</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}
