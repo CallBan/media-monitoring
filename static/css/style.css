@@ -1,79 +1,134 @@
-/* Общие стили */
+/* Импортируем приятный шрифт */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 16px;
-  background-color: #f7f9fc;
-  color: #333;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Контейнер формы */
+h1 {
+  text-align: center;
+}
+
 .search-container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 25px;
-  background: #ffffff;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Заголовки и метки */
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-/* Поля ввода */
-.form-input,
-.form-select,
-.form-control {
-  width: 100%;
-  padding: 10px 12px;
-  font-size: 15px;
+  color: #333;
+  padding: 1rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 4px;
+  margin: 20px 50px;
+  display: inline-block;
+}
+
+/* Общие стили для формы */
+.search-form {
+  width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Секция с ключевыми словами */
+.search-form > div:first-of-type {
+  margin-bottom: 1rem;
+}
+.search-form .form-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.search-form .form-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   box-sizing: border-box;
 }
 
-/* Скрытая метка (для выравнивания кнопки) */
-.hidden-label {
-  visibility: hidden;
+/* Флекс-контейнер для селектора, календаря и кнопки */
+.search-form .form-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-/* Ряд для полей на одной линии */
-.form-row {
+/* Группа селектора и календаря — они занимают всё оставшееся пространство */
+.search-form .form-group {
+  display: flex;
+  flex: 1;
+  gap: 0.75rem;
+}
+
+/* Обёртка для каждого поля */
+.search-form .form-control-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Привязываем единый размер полей */
+.search-form .form-control-wrapper input,
+.search-form .form-control-wrapper .choices__inner {
+  min-height: 2.5rem; /* одинаковая высота */
+  font-size: 1rem;
+  padding: 0 0.75rem;
+  box-sizing: border-box;
+}
+
+/* Подстройка для Choices.js */
+.search-form .choices-container .choices {
+  width: 100%;
+}
+.search-form .choices__inner {
+  min-height: 2.5rem;
+  height: 2.5rem;
+  border-radius: 4px;
+}
+
+.search-form .button-wrapper {
+  flex: 0 0 8rem;
+}
+.search-form .button-wrapper .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 500;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.search-form .button-wrapper .btn:hover {
+  background-color: #0056b3;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+.search-form .choices-container .choices__inner {
+  min-height: 2.5rem;
+  height: auto !important;
+  padding: 0.25rem;
+  box-sizing: border-box;
+}
+
+.search-form .choices-container .choices__list--multiple {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  align-items: flex-end;
-  margin-top: 20px;
+  gap: 0.25rem;
 }
 
-/* Группы в ряду */
-.form-group {
-  flex: 1;
-  min-width: 220px;
+.search-form .form-row {
+  align-items: flex-start;
 }
 
-/* Задание одинаковой ширины для "Источники" и "Период" */
-#sources,
-#dateRange {
-  min-width: 250px;
-}
-
-/* Кнопка */
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-  padding: 12px 20px;
-  font-size: 15px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: #0056b3;
+.height-format {
+  height: 3.3rem;
 }

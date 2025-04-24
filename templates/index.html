@@ -1,13 +1,14 @@
 {% extends "layout.html" %} {% block content %}
+<h1>Мониторинг СМИ</h1>
 <div class="search-container">
   <form
     id="searchForm"
     class="search-form"
     method="POST"
-    action="{{ url_for('start_parsing') }}"
+    action="{{ url_for('search') }}"
   >
     <!-- Ключевые слова -->
-    <div class="form-group">
+    <div>
       <label for="keywords" class="form-label">Ключевые слова</label>
       <input
         type="text"
@@ -19,54 +20,78 @@
     </div>
 
     <div class="form-row">
-      <!-- Источники -->
       <div class="form-group">
-        <label class="form-label">Источники</label>
-        <div class="select-wrapper">
-          <select id="sources" name="sources" multiple class="form-select">
-            {% for source in news_sources %}
-            <option value="{{ source['id'] }}">{{ source['name'] }}</option>
-            {% endfor %}
-          </select>
+        <!-- Источники -->
+        <div class="form-control-wrapper">
+          <label class="form-label">Источники</label>
+          <div class="choices-container">
+            <select id="sources" name="sources" multiple>
+              {% for source in news_sources %}
+              <option value="{{ source['id'] }}">{{ source['name'] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <!-- Календарь -->
+        <div class="form-control-wrapper">
+          <label for="dateRange" class="form-label">Период</label>
+          <input
+            type="text"
+            id="dateRange"
+            class="form-control height-format"
+            placeholder="Выберите период"
+            name="date_range"
+          />
         </div>
       </div>
 
-      <!-- Календарь -->
-      <div class="form-group">
-        <label for="dateRange" class="form-label">Период</label>
-        <input
-          type="text"
-          id="dateRange"
-          class="form-control"
-          placeholder="Выберите период"
-          name="date_range"
-        />
-      </div>
-
       <!-- Кнопка -->
-      <div class="form-group mt-3">
-        <button type="submit" class="btn btn-primary">Найти</button>
+      <div class="button-wrapper">
+        <label for="dateRange" class="form-label hidden">Период</label>
+        <button
+          type="submit"
+          class="height-format btn btn-primary"
+          name="button"
+        >
+          Найти
+        </button>
       </div>
     </div>
   </form>
-
-  <div id="results">
-  {% if news %}
-    <h2 class="mt-4 text-white">Результаты поиска</h2>
-    <ul class="list-group">
-      {% for item in news %}
-        <li class="list-group-item">
-          <h5><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></h5>
-          <p class="mb-1"><strong>Дата публикации:</strong> {{ item.date_publication }}</p>
-          <p class="mb-0">{{ item.content[:300] }}...</p>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">Пока нет результатов.</p>
-  {% endif %}
 </div>
 
-
+<div id="results">
+  {% if news %}
+  <h2 class="mt-4 text-white">Результаты поиска</h2>
+  <form action="/submit-news" method="POST">
+    <ul class="list-group">
+      {% for item in news %}
+      <li class="list-group-item">
+        <div class="checkbox-container">
+          <input
+            class="custom-checkbox"
+            type="checkbox"
+            id="news-{{ item.id }}"
+            name="selected_news"
+            value="{{ item.id }}"
+          />
+          <label for="news-{{ item.id }}"></label>
+        </div>
+        <div class="content-wrapper">
+          <h5><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></h5>
+          <span class="date-container">
+            <strong>Дата публикации:</strong> {{ item.date_publication }}
+          </span>
+          <p>{{ item.content[:300] }}...</p>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    <div class="submit-container">
+      <button type="submit" class="submit-btn">Экспортировать</button>
+    </div>
+  </form>
+  {% endif %}
 </div>
 {% endblock %}

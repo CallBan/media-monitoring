@@ -5,24 +5,22 @@ from parser.switch import get_sources
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 NEWS_SOURCES = get_sources()
-# Временные данные для примера
-
-@app.route('/', methods=['GET', 'POST'])
-def start_parsing():
-    news = None
-    if request.method == "POST":
-        keywords = request.form.get("keywords")
-        sources = request.form.getlist("sources")
-        date_range = request.form.get("date_range")
-        main = Main(sources=sources, keywords=keywords, date_range=date_range)
-        news = main.get_list_news()
-    return render_template("index.html", news_sources=NEWS_SOURCES, news = news)
 
 
-@app.route('/')
+@app.route('/search', methods=['POST'])
+def search():
+    keywords = request.form.get("keywords")
+    sources = request.form.getlist("sources")
+    date_range = request.form.get("date_range")
+    main = Main(sources=sources, keywords=keywords, date_range=date_range)
+    news = main.get_list_news()
+    return render_template("index.html", news_sources=NEWS_SOURCES, news=news)
+
+
+@app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', news_sources=NEWS_SOURCES)
+    return render_template('index.html', news_sources=NEWS_SOURCES, news=None)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
