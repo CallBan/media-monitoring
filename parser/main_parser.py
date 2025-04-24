@@ -34,6 +34,7 @@ class Main:
             print(f"Текст: {item['content'][:200]}...")
             print(f"Дата публикации: {item['date_publication']}")
 
+
     def export_to_excel(self, mask):
         mask_news = []
         for i in mask:

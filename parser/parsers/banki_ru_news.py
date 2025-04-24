@@ -5,7 +5,6 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 
-
 class BankiRuParser:
     def __init__(self, url, driver, date_range, key_words=None, count_pages=5):
         self.url = url
