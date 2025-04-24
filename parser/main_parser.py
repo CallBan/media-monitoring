@@ -11,11 +11,10 @@ load_dotenv()
 class Main:
     def __init__(self, sources, date_range, keywords=None):
         giga_chat_api = os.getenv('API_KEY')
-        print(giga_chat_api)
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
         driver = webdriver.Chrome()
 
-        self.news_pages = []  # Массив для обработки страниц из различных источников
+        self.news_pages = []
         for source in sources:
             url_class = switch(source)
             url, class_parser = url_class['url'], url_class['class_link']
@@ -49,8 +48,6 @@ class Main:
                     item['content']) > 150 else item['content']
                 new_one['Источник'] = 'banki.ru'
                 new_one['Ссылка'] = item['url']
-                # del item['content']  # Можно удалить, если не нужно в таблице
-                # del item['id']
                 mask_news.append(new_one)
 
         return excel_generation.ExcelGeneration(mask_news).generate()
