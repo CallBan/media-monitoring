@@ -5,8 +5,7 @@
     id="searchForm"
     class="search-form"
     method="POST"
-    action="{{ url_for('search') }}"
-  >
+    action="{{ url_for('search') }}">
     <!-- Ключевые слова -->
     <div>
       <label for="keywords" class="form-label">Ключевые слова</label>
@@ -25,7 +24,7 @@
         <div class="form-control-wrapper">
           <label class="form-label">Источники</label>
           <div class="choices-container">
-            <select id="sources" name="sources" multiple>
+            <select id="sources" name="sources" multiple required>
               {% for source in news_sources %}
               <option value="{{ source['id'] }}">{{ source['name'] }}</option>
               {% endfor %}
@@ -42,6 +41,7 @@
             class="form-control height-format"
             placeholder="Выберите период"
             name="date_range"
+            required
           />
         </div>
       </div>
