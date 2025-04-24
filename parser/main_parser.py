@@ -27,8 +27,8 @@ class Main:
 
 
     def __print_news_tittles(self):
-        for idx, item in enumerate(self.news_pages, 1):
-            print(f"\nНовость #{idx}:")
+        for item in self.news_pages:
+            print(f"\nНовость #{item['id']}:")
             print(f"Заголовок: {item['title']}")
             print(f"URL: {item['url']}")
             print(f"Текст: {item['content'][:200]}...")
@@ -48,6 +48,7 @@ class Main:
             item['Источник'] = 'banki.ru'
             item['Ссылка'] = item.pop('url')
             del item['content']  # Можно удалить, если не нужно в таблице
+            del item['id']  # Можно удалить, если не нужно в таблице
         save_excel = excel_generation.ExcelGeneration(mask_news, 'news3.xlsx')
 
 # sources = ['banki.ru']

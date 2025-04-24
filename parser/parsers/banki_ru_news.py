@@ -117,10 +117,11 @@ class BankiRuParser:
 
     def news_page(self):
         news_urls = self.urls_list()
-        for url in news_urls:
+        for idx, url in enumerate(news_urls, 1):
             try:
                 title, content, date_publication = self.parse_news_page(url)
                 self.news.append({
+                    "id": idx,
                     "url": url,
                     "title": title,
                     "content": content,
