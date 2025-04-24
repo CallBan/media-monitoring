@@ -1,0 +1,114 @@
+#results {
+  max-width: 855px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+ul {
+  padding-left: 0px;
+}
+
+.list-group {
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.list-group-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.checkbox-container {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+.custom-checkbox {
+  width: 100%;
+  height: 100%;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.content-wrapper {
+  width: calc(100% - 40px);
+  overflow: hidden;
+}
+
+.list-group-item h5 {
+  margin: 0 0 10px 0;
+  color: #1a1a1a;
+  font-size: 1.2rem;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-group-item h5 a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+.list-group-item p {
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date-container {
+  display: block;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Контейнер для кнопки */
+.submit-container {
+  display: flex;
+  justify-content: flex-end; /* Выравниваем кнопку по правому краю */
+  margin-top: 20px; /* Отступ сверху */
+}
+
+/* Стили для кнопки */
+.submit-btn {
+  padding: 10px 20px; /* Внутренние отступы */
+  font-size: 1rem; /* Размер текста */
+  font-weight: 500; /* Жирность текста */
+  color: #fff; /* Цвет текста */
+  background-color: #007bff; /* Основной цвет фона */
+  border: none; /* Убираем границу */
+  border-radius: 4px; /* Закругление углов */
+  cursor: pointer; /* Изменение курсора при наведении */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Плавные переходы */
+}
+
+.submit-btn:hover {
+  background-color: #0056b3; /* Темнее цвет при наведении */
+}
+
+.submit-btn:active {
+  transform: scale(0.98); /* Легкое уменьшение при нажатии */
+}
