@@ -37,18 +37,20 @@ class Main:
 
     def export_to_excel(self, mask):
         mask_news = []
-        for i in mask:
-            mask_news.append(dict(self.news_pages[i]))
 
-        for item in mask_news:
-            item['Дата публикации'] = item.pop('date_publication')
-            item['Заголовок'] = item.pop('title')
-            """Подкрутили LLM для summary"""
-            item['Краткая суть'] = self.giga.take_answer(item['content']) if len(item['content']) > 150 else item['content']
-            item['Источник'] = 'banki.ru'
-            item['Ссылка'] = item.pop('url')
-            del item['content']  # Можно удалить, если не нужно в таблице
-            del item['id']  # Можно удалить, если не нужно в таблице
+        for item in self.news_pages:
+
+            if item['id'] in mask:
+                item['Дата публикации'] = item.pop('date_publication')
+                item['Заголовок'] = item.pop('title')
+                """Подкрутили LLM для summary"""
+                item['Краткая суть'] = self.giga.take_answer(item['content']) if len(item['content']) > 150 else item['content']
+                item['Источник'] = 'banki.ru'
+                item['Ссылка'] = item.pop('url')
+                del item['content']  # Можно удалить, если не нужно в таблице
+                del item['id']
+                mask_news.append(item)
+
         save_excel = excel_generation.ExcelGeneration(mask_news, 'news3.xlsx')
 
 # sources = ['banki.ru']

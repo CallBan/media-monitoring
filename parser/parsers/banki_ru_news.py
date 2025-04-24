@@ -121,7 +121,7 @@ class BankiRuParser:
             try:
                 title, content, date_publication = self.parse_news_page(url)
                 self.news.append({
-                    "id": idx,
+                    "id": str(idx),
                     "url": url,
                     "title": title,
                     "content": content,

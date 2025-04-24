@@ -6,6 +6,7 @@ from parser.switch import get_sources
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 NEWS_SOURCES = get_sources()
+main = None
 # Для тестирования
 # news = [
 #     {'id': 123, 'url': 'https://ya.ru/', 'title': 'Загловок 1', 'content': 'Новость 1'},
@@ -19,6 +20,7 @@ def index():
 
 @app.route('/search', methods=['POST'])
 def search():
+    global main
     keywords = request.form.get("keywords")
     sources = request.form.getlist("sources")
     date_range = request.form.get("date_range")
@@ -31,9 +33,8 @@ def search():
 def export():
     # список id-шников выбранных новостоей (тип - string)
     selected_news = request.form.getlist("selected_news")
-    """
-    TODO: отправлять excel-файл 
-    """
+    print(selected_news)
+    main.export_to_excel(selected_news)
     return render_template("result.html")
 
 
