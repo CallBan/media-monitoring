@@ -2,31 +2,33 @@ from flask import Flask, render_template, request
 from parser.main_parser import Main
 from parser.switch import get_sources
 
-app = Flask(__name__)
-app.secret_key = 'secret_key'
-NEWS_SOURCES = get_sources()
-# Временные данные для примера
-
-@app.route('/', methods=['GET', 'POST'])
-def start_parsing():
-    news = None
-    if request.method == "POST":
-        keywords = request.form.get("keywords")
-        sources = request.form.getlist("sources")
-        date_range = request.form.get("date_range")
-        print(date_range)
-        print(type(date_range))
-        main = Main(sources=sources, keywords=keywords, date_range=date_range)
-
-        news = main.get_list_news()
-    return render_template("index.html", news_sources=NEWS_SOURCES, news=news)
-
-
-
-@app.route('/')
-def index():
-    return render_template('index.html', news_sources=NEWS_SOURCES)
-
-
-if __name__ == '__main__':
-    app.run()
+main = Main(["banki-ru"], '2025-04-22')
+main.export_to_excel([1, 4, 5]) # Тест сохранения таблицы в excel+gigaChat
+# app = Flask(__name__)
+# app.secret_key = 'secret_key'
+# NEWS_SOURCES = get_sources()
+# # Временные данные для примера
+#
+# @app.route('/', methods=['GET', 'POST'])
+# def start_parsing():
+#     news = None
+#     if request.method == "POST":
+#         keywords = request.form.get("keywords")
+#         sources = request.form.getlist("sources")
+#         date_range = request.form.get("date_range")
+#         print(date_range)
+#         print(type(date_range))
+#         main = Main(sources=sources, keywords=keywords, date_range=date_range)
+#
+#         news = main.get_list_news()
+#     return render_template("index.html", news_sources=NEWS_SOURCES, news=news)
+#
+#
+#
+# @app.route('/')
+# def index():
+#     return render_template('index.html', news_sources=NEWS_SOURCES)
+#
+#
+# if __name__ == '__main__':
+#     app.run()

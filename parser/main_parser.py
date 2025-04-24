@@ -1,6 +1,7 @@
 from selenium import webdriver
 from llm import llm_model
 from parser.switch import switch
+from excel import excel_generation
 import os
 
 
@@ -33,16 +34,20 @@ class Main:
             print(f"Текст: {item['content'][:200]}...")
             print(f"Дата публикации: {item['date_publication']}")
 
-        # for news_one_source in self.news_pages:
-        #     for item in news_one_source:
-        #         item['Дата публикации'] = item.pop('date_publication')
-        #         item['Заголовок'] = item.pop('title')
-        #         """Подкрутили LLM для summary"""
-        #         item['Краткая суть'] = self.giga.take_answer(item['content']) if len(item['content']) > 150 else item['content']
-        #         item['Источник'] = 'banki.ru'
-        #         item['Ссылка'] = item.pop('url')
-        #         del item['content']  # Можно удалить, если не нужно в таблице
-        #     save_excel = excel_generation.ExcelGeneration(news_one_source, 'news3.xlsx')
+    def export_to_excel(self, mask):
+        mask_news = []
+        for i in mask:
+            mask_news.append(dict(self.news_pages[i]))
+
+        for item in mask_news:
+            item['Дата публикации'] = item.pop('date_publication')
+            item['Заголовок'] = item.pop('title')
+            """Подкрутили LLM для summary"""
+            item['Краткая суть'] = self.giga.take_answer(item['content']) if len(item['content']) > 150 else item['content']
+            item['Источник'] = 'banki.ru'
+            item['Ссылка'] = item.pop('url')
+            del item['content']  # Можно удалить, если не нужно в таблице
+        save_excel = excel_generation.ExcelGeneration(mask_news, 'news3.xlsx')
 
 # sources = ['banki.ru']
 # date_range = ['2025-04-22', '2025-04-23']

@@ -80,7 +80,9 @@ class BankiRuParser:
                             if not re.search(self.pattern_key_words, text.lower()):
                                 continue
 
-                        self.urls.append('https://www.banki.ru' + href)
+                        full_url = 'https://www.banki.ru' + href
+                        if full_url not in self.urls:
+                            self.urls.append(full_url)
 
                 except Exception as e:
                     print(f"Ошибка в блоке: {e}")
