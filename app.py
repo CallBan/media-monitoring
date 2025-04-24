@@ -5,6 +5,15 @@ from parser.switch import get_sources
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 NEWS_SOURCES = get_sources()
+# Для тестирования
+# news = [
+#     {'id': 123, 'url': 'https://ya.ru/', 'title': 'Загловок 1', 'content': 'Новость 1'},
+#     {'id': 456, 'url': 'https://ya.ru/', 'title': 'Загловок 2', 'content': 'Новость 2'}
+# ]
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html', news_sources=NEWS_SOURCES, news=None)
 
 
 @app.route('/search', methods=['POST'])
@@ -17,9 +26,14 @@ def search():
     return render_template("index.html", news_sources=NEWS_SOURCES, news=news)
 
 
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html', news_sources=NEWS_SOURCES, news=None)
+@app.route('/export', methods=['POST'])
+def export():
+    # список id-шников выбранных новостоей (тип - string)
+    selected_news = request.form.getlist("selected_news")
+    """
+    TODO: отправлять excel-файл 
+    """
+    return render_template("result.html")
 
 
 if __name__ == '__main__':
