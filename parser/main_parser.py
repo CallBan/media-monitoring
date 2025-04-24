@@ -2,12 +2,15 @@ from selenium import webdriver
 from llm import llm_model
 from parser.switch import switch
 from excel import excel_generation
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 
 class Main:
-    def __init__(self, sources, date_range, keywords = None):
-        giga_chat_api = os.environ.get('API_GIGA_CHAT')
+    def __init__(self, sources, date_range, keywords=None):
+        giga_chat_api = os.getenv('API_KEY')
         print(giga_chat_api)
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
         driver = webdriver.Chrome()
@@ -25,7 +28,6 @@ class Main:
     def get_list_news(self):
         return self.news_pages
 
-
     def __print_news_tittles(self):
         for item in self.news_pages:
             print(f"\nНовость #{item['id']}:")
@@ -34,25 +36,21 @@ class Main:
             print(f"Текст: {item['content'][:200]}...")
             print(f"Дата публикации: {item['date_publication']}")
 
-
     def export_to_excel(self, mask):
         mask_news = []
 
         for item in self.news_pages:
-
+            new_one = {}
             if item['id'] in mask:
-                item['Дата публикации'] = item.pop('date_publication')
-                item['Заголовок'] = item.pop('title')
+                new_one['Дата публикации'] = item['date_publication']
+                new_one['Заголовок'] = item['title']
                 """Подкрутили LLM для summary"""
-                item['Краткая суть'] = self.giga.take_answer(item['content']) if len(item['content']) > 150 else item['content']
-                item['Источник'] = 'banki.ru'
-                item['Ссылка'] = item.pop('url')
-                del item['content']  # Можно удалить, если не нужно в таблице
-                del item['id']
-                mask_news.append(item)
+                new_one['Краткая суть'] = self.giga.take_answer(item['content']) if len(
+                    item['content']) > 150 else item['content']
+                new_one['Источник'] = 'banki.ru'
+                new_one['Ссылка'] = item['url']
+                # del item['content']  # Можно удалить, если не нужно в таблице
+                # del item['id']
+                mask_news.append(new_one)
 
-        save_excel = excel_generation.ExcelGeneration(mask_news, 'news3.xlsx')
-
-# sources = ['banki.ru']
-# date_range = ['2025-04-22', '2025-04-23']
-# main = Main(sources=sources, date_range=date_range)
+        return excel_generation.ExcelGeneration(mask_news).generate()
