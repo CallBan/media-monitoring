@@ -5,7 +5,9 @@
     id="searchForm"
     class="search-form"
     method="POST"
-    action="{{ url_for('search') }}">
+    action="{{ url_for('search') }}"
+    novalidate
+  >
     <!-- Ключевые слова -->
     <div>
       <label for="keywords" class="form-label">Ключевые слова</label>
@@ -29,6 +31,13 @@
               <option value="{{ source['id'] }}">{{ source['name'] }}</option>
               {% endfor %}
             </select>
+            <div
+              class="error-message"
+              id="sources-error"
+              style="display: none; color: red"
+            >
+              Пожалуйста, выберите хотя бы один источник
+            </div>
           </div>
         </div>
 
@@ -43,6 +52,13 @@
             name="date_range"
             required
           />
+          <div
+            class="error-message"
+            id="dateRange-error"
+            style="display: none; color: red"
+          >
+            Пожалуйста, укажите период
+          </div>
         </div>
       </div>
 
