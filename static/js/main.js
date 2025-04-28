@@ -1,50 +1,61 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const choices = new Choices("#sources", {
-    removeItemButton: true, // Показывает кнопки для удаления выбранных элементов
-    placeholder: true, // Включает placeholder
-    placeholderValue: "Выберите источники", // Текст placeholder
-    noChoicesText: "Нет доступных вариантов", // Текст при отсутствии вариантов
-    itemSelectText: "Нажмите для выбора", // Подсказка при наведении
+  // Инициализация Choices для мультиселекта
+  const sourcesSelect = new Choices("#sources", {
+    removeItemButton: true,
+    placeholder: true,
+    placeholderValue: "Выберите источники",
+    noChoicesText: "Нет доступных вариантов",
+    itemSelectText: "Нажмите для выбора",
   });
 
-  flatpickr("#dateRange", {
+  // Инициализация flatpickr с русской локализацией и ограничениями
+  const datePicker = flatpickr("#dateRange", {
     mode: "range",
     dateFormat: "Y-m-d",
     locale: "ru",
+    maxDate: "today",
   });
 
   const form = document.getElementById("searchForm");
+  const sourcesError = document.getElementById("sources-error");
+  const dateRangeError = document.getElementById("dateRange-error");
+  const loader = document.getElementById("loader");
 
+  // Обработчик отправки формы
   form.addEventListener("submit", function (e) {
     let isValid = true;
 
-    // Проверка источников
-    const sources = document.getElementById("sources");
-    const sourcesError = document.getElementById("sources-error");
-    if (sources.selectedOptions.length === 0) {
+    // Валидация источников
+    if (document.getElementById("sources").selectedOptions.length === 0) {
       sourcesError.style.display = "block";
       isValid = false;
-    } else {
-      sourcesError.style.display = "none";
     }
 
-    // Проверка периода
-    const dateRange = document.getElementById("dateRange");
-    const dateRangeError = document.getElementById("dateRange-error");
-    if (!dateRange.value.trim()) {
+    // Валидация дат
+    if (!datePicker.input.value.trim()) {
       dateRangeError.style.display = "block";
       isValid = false;
-    } else {
-      dateRangeError.style.display = "none";
+    } 
+
+    if (!isValid) {
+      e.preventDefault();
+      return; // Прекращаем выполнение если форма не валидна
     }
+
+    loader.classList.remove("loader-hidden");
+    console.log('hahaha')
   });
 
-  // Убираем сообщения об ошибках при изменении полей
+  // Сброс ошибок при изменении полей
   document.getElementById("sources").addEventListener("change", function () {
-    document.getElementById("sources-error").style.display = "none";
+    sourcesError.style.display = "none";
   });
 
-  document.getElementById("dateRange").addEventListener("input", function () {
-    document.getElementById("dateRange-error").style.display = "none";
+  datePicker.input.addEventListener("input", function () {
+    dateRangeError.style.display = "none";
+  });
+
+  window.addEventListener("load", function () {
+    loader.classList.add("loader-hidden");
   });
 });

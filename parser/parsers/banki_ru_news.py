@@ -5,6 +5,7 @@ from datetime import datetime
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import WebDriverException
 
+
 class BankiRuParser:
     def __init__(self, url, driver, date_range, key_words=None, count_pages=5):
         self.url = url
@@ -13,19 +14,7 @@ class BankiRuParser:
         self.driver.get(url)
         self.TIMEOUT = 0.2
         self.news = []
-
-        try:
-            if ' to ' in date_range:
-                start_str, end_str = date_range.split(' to ')
-                self.date_start = datetime.strptime(start_str.strip(), "%Y-%m-%d").date()
-                self.date_end = datetime.strptime(end_str.strip(), "%Y-%m-%d").date()
-            else:
-                single_date = datetime.strptime(date_range.strip(), "%Y-%m-%d").date()
-                self.date_start = self.date_end = single_date
-        except Exception as e:
-            print(f"Ошибка разбора даты: {e}")
-            today = datetime.today().date()
-            self.date_start = self.date_end = today
+        self.date_start, self.date_end = date_range
 
         self.pattern_lenta = re.compile(r'/news/lenta/\?id')
         self.pattern_key_words = None
@@ -60,12 +49,12 @@ class BankiRuParser:
                     # Пропускаем новости вне диапазона
                     if not (self.date_start <= news_date <= self.date_end):
                         print(f"Пропускаем блок вне диапазона: {news_date}")
-                        print(f"Старт {self.date_start}, Конец {self.date_end}, Текущая {news_date}")
+                        print(
+                            f"Старт {self.date_start}, Конец {self.date_end}, Текущая {news_date}")
                         if self.date_start > news_date:
                             flag_break = True
                             break
                         continue
-
 
                     # Извлекаем ссылки на новости из этого блока
                     for link in block.find_all('a', class_='NewsItemstyled__StyledItemTitle-sc-jjc7yr-7'):
