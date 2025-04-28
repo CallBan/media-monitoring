@@ -1,4 +1,3 @@
-/* Импортируем приятный шрифт */
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
 
 body {
@@ -131,4 +130,18 @@ h1 {
 
 .height-format {
   height: 3.3rem;
+}
+
+.choices {
+  margin-bottom: 5px;
+}
+
+#dateRange {
+  margin-bottom: 7px;
+}
+
+.choices__list--multiple .choices__item {
+  background-color: #007bff;
+  border-radius: 5px;
+  border: 1px solid #007bff;
 }
