@@ -17,17 +17,14 @@ months = {
     'сентября': '09', 'октября': '10', 'ноября': '11', 'декабря': '12'
 }
 
-date_start = datetime.strptime(DATE_RANGE[0], '%Y-%m-%d').date()
-date_end = datetime.strptime(DATE_RANGE[1], '%Y-%m-%d').date()
 today = datetime.today()
 yesterday = today - timedelta(days=1)
 
 
-class RiaParser:
+class RIAParser:
     def __init__(self, url, driver, date_range, key_words=None):
-
+        self.url = url
         self.driver = driver
-        self.driver.get(url)
         self.TIMEOUT = 0.1
         self.date_start, self.date_end = date_range
 
@@ -43,7 +40,7 @@ class RiaParser:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         })
 
-    def parse_date(self, date_str: str) -> Union[datetime.date, None]:
+    def __parse_date(self, date_str: str) -> Union[datetime.date, None]:
         """Парсит дату из различных форматов"""
         date_str = date_str.strip()
 
@@ -69,7 +66,7 @@ class RiaParser:
             print(f"Ошибка парсинга даты: {date_str} - {e}")
         return None
 
-    def extract_news_items(self, html: str) -> List[Dict]:
+    def __extract_news_items(self, html: str) -> List[Dict]:
         """Извлекает новости из HTML"""
         soup = BeautifulSoup(html, 'html.parser')
         items = soup.find_all('div', class_='list-item')
@@ -92,12 +89,12 @@ class RiaParser:
                     continue
 
             date_str = date_div.text.strip()
-            article_date, time_hour_min = self.parse_date(date_str)
+            article_date, time_hour_min = self.__parse_date(date_str)
 
-            if article_date < date_start:
+            if article_date < self.date_start:
                 return extracted, False  # Прекращаем обработку, если дата слишком ранняя
 
-            if article_date > date_end:
+            if article_date > self.date_end:
                 continue
 
             extracted.append({
@@ -112,7 +109,7 @@ class RiaParser:
 
         return extracted, True # while продолжает работать
 
-    def scroll_and_load(self):
+    def __scroll_and_load(self):
         """Выполняет скроллинг и загрузку контента"""
         scroll_count = 0
         continue_loading = True
@@ -135,19 +132,19 @@ class RiaParser:
             time.sleep(SCROLL_PAUSE_TIME)
 
             if scroll_count % PARSE_INTERVAL == 0:
-                new_items, continue_loading = self.extract_news_items(self.driver.page_source)
+                new_items, continue_loading = self.__extract_news_items(self.driver.page_source)
                 self.news.extend(new_items)
 
-    def run(self):
+    def __run(self):
         """Основной метод запуска парсера"""
         try:
-            self.driver.get(URL)
-            self.scroll_and_load()
+            self.driver.get(self.url)
+            self.__scroll_and_load()
             return self.news
         finally:
             self.driver.quit()
 
-    def parse_news_page(self, url: str) -> tuple:
+    def __parse_news_page(self, url: str) -> tuple:
         """Парсинг полного текста новости через requests и BeautifulSoup"""
         try:
             response = self.session.get(url)
@@ -169,14 +166,15 @@ class RiaParser:
 
 
 
-    def news_page(self):
-        news_urls = self.run()
-        for item in news_urls[:10]:
+    def news_page(self): # public
+        news_urls = self.__run()
+        for item in news_urls:
             try:
-                title, content = self.parse_news_page(item['url'])
+                title, content = self.__parse_news_page(item['url'])
                 item['content'] = content
                 # Заголовок может не подтягиваться при парсинге списка ссылок, прописываем еще раз, хотя сверху я наверное None на title поставлю
                 item['title'] = title
             except Exception as e:
                 print(f"{e}")
         return self.news
+
