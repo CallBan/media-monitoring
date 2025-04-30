@@ -1,3 +1,5 @@
+import re
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from llm import llm_model
@@ -35,14 +37,23 @@ class Main:
             today = datetime.today().date()
             self.date_start = self.date_end = today
 
+        symbols = re.compile(r'[,.!?\s]+')  # можно добавить другие символы и пробел
+
+        words = re.split(symbols, keywords)
+        words = [word for word in words if word]
+
+        escaped_words = [re.escape(word.lower()) for word in words]
+        pattern_key_words = re.compile('|'.join(escaped_words))
+
         self.news_pages = []
         for source in sources:
             url_class = switch(source)
             url, class_parser = url_class['url'], url_class['class_link']
 
             self.bank = class_parser(url, driver, date_range=(
-                self.date_start, self.date_end))
+                self.date_start, self.date_end), pattern=pattern_key_words)
             self.news_pages.extend(self.bank.news_page())
+            driver.quit()
 
         self.__print_news_tittles()
 
@@ -60,7 +71,7 @@ class Main:
     def export_to_excel(self, mask):
         mask_news = []
 
-        for item in self.news_pages:
+        for item in self.news_pages[:5]:
             new_one = {}
             if item['id'] in mask:
                 new_one['Дата публикации'] = item['date_publication']

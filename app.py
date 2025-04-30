@@ -18,6 +18,7 @@ def index():
 def search():
     global main
     keywords = request.form.get("keywords")
+    print(keywords)
     sources = request.form.getlist("sources")
     date_range = request.form.get("date_range")
     main = Main(sources=sources, keywords=keywords, date_range=date_range)

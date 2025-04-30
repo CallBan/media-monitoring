@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException
 
 
 class BankiRuParser:
-    def __init__(self, url, driver, date_range, key_words=None, count_pages=5):
+    def __init__(self, url, driver, date_range, pattern=None, count_pages=5):
         self.url = url
         self.driver = driver
         self.count_pages = count_pages
@@ -18,9 +18,8 @@ class BankiRuParser:
 
         self.pattern_lenta = re.compile(r'/news/lenta/\?id')
         self.pattern_key_words = None
-        if key_words:
-            escaped_words = [re.escape(word.lower()) for word in key_words]
-            self.pattern_key_words = re.compile('|'.join(escaped_words))
+        if pattern:
+            self.pattern_key_words = pattern
 
         self.urls = []
 
@@ -84,7 +83,7 @@ class BankiRuParser:
                 print(f"Не удалось загрузить страницу {next_page}: {e}")
                 break
             page_num += 1
-        return self.urls
+        return self.urls[:5]
 
     def parse_news_page(self, url):
         """Парсинг полного текста новости"""

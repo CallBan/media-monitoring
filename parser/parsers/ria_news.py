@@ -22,17 +22,17 @@ yesterday = today - timedelta(days=1)
 
 
 class RIAParser:
-    def __init__(self, url, driver, date_range, key_words=None):
+    def __init__(self, url, driver, date_range, pattern=None):
         self.url = url
         self.driver = driver
         self.TIMEOUT = 0.1
         self.date_start, self.date_end = date_range
 
         self.pattern_key_words = None
-        if key_words:
-            escaped_words = [re.escape(word.lower()) for word in key_words]
-            self.pattern_key_words = re.compile('|'.join(escaped_words))
 
+        if pattern:
+            self.pattern_key_words = pattern
+        print(self.pattern_key_words)
         self.news: List[Dict] = []
         self.processed_urls = set()
         self.session = requests.Session()  # Используем сессию для повторных запросов
@@ -84,10 +84,6 @@ class RIAParser:
             if url in self.processed_urls:
                 continue
 
-            if self.pattern_key_words:
-                if not re.search(self.pattern_key_words, links[1].text):
-                    continue
-
             date_str = date_div.text.strip()
             article_date, time_hour_min = self.__parse_date(date_str)
 
@@ -97,17 +93,30 @@ class RIAParser:
             if article_date > self.date_end:
                 continue
 
+            title = links[1].text.strip()
+            if not title:
+                meta_title = item.find('meta', itemprop='name')
+                if meta_title:
+                    title = meta_title.get('content', '').strip()
+
+            if not title:
+                title = links[0].text.strip()
+
+            if self.pattern_key_words:
+                if not re.search(self.pattern_key_words, title.lower()):
+                    continue
+
             extracted.append({
                 "id": str(idx),
                 "url": url,
-                "title": links[1].text if links[1].text else links[0].text,
+                "title": title,
                 "date_publication": article_date.strftime('%Y-%m-%d') + ", " + time_hour_min,
                 "content": None,
             })
             self.processed_urls.add(url)
             idx += 1
 
-        return extracted, True # while продолжает работать
+        return extracted, True  # while продолжает работать
 
     def __scroll_and_load(self):
         """Выполняет скроллинг и загрузку контента"""
@@ -137,12 +146,10 @@ class RIAParser:
 
     def __run(self):
         """Основной метод запуска парсера"""
-        try:
-            self.driver.get(self.url)
-            self.__scroll_and_load()
-            return self.news
-        finally:
-            self.driver.quit()
+        self.driver.get(self.url)
+        self.__scroll_and_load()
+        return self.news
+
 
     def __parse_news_page(self, url: str) -> tuple:
         """Парсинг полного текста новости через requests и BeautifulSoup"""
@@ -164,16 +171,12 @@ class RIAParser:
         except Exception as e:
             return None, None
 
-
-
     def news_page(self): # public
         news_urls = self.__run()
         for item in news_urls:
             try:
                 title, content = self.__parse_news_page(item['url'])
                 item['content'] = content
-                # Заголовок может не подтягиваться при парсинге списка ссылок, прописываем еще раз, хотя сверху я наверное None на title поставлю
-                item['title'] = title
             except Exception as e:
                 print(f"{e}")
         return self.news
