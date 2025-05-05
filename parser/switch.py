@@ -1,4 +1,4 @@
-from parser.parsers import ria_news, banki_ru_news
+from parser.parsers import ria_news, banki_ru_news, rbk_news
 
 
 def get_sources():
@@ -7,6 +7,8 @@ def get_sources():
             'name': 'РИА Новости', 'class_link': ria_news.RIAParser},
         {'id': 'banki-ru', 'url': 'https://www.banki.ru/news/lenta/', 'name': 'Banki.ru',
          'class_link': banki_ru_news.BankiRuParser},
+        {'id': 'rbk', 'url': 'https://www.rbc.ru/finances/', 'name': 'РБК',
+         'class_link': rbk_news.RBKParser}
     ]
 
 

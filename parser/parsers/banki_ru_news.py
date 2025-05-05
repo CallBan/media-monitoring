@@ -17,9 +17,7 @@ class BankiRuParser:
         self.date_start, self.date_end = date_range
 
         self.pattern_lenta = re.compile(r'/news/lenta/\?id')
-        self.pattern_key_words = None
-        if pattern:
-            self.pattern_key_words = pattern
+        self.pattern_key_words = pattern
 
         self.urls = []
 
@@ -97,7 +95,7 @@ class BankiRuParser:
 
         # Удаляем префикс и преобразуем в datetime
         date_str = date_raw.replace("Дата публикации: ", "")
-        date_publication = datetime.strptime(date_str, "%d.%m.%Y %H:%M")
+        date_publication = datetime.strptime(date_str, "%d.%m.%Y")
 
         content = '\n'.join([p.text.strip()
                             for p in self.driver.find_elements(By.TAG_NAME, 'p')])
@@ -105,11 +103,10 @@ class BankiRuParser:
 
     def news_page(self):
         news_urls = self.urls_list()
-        for idx, url in enumerate(news_urls, 1):
+        for url in news_urls:
             try:
                 title, content, date_publication = self.parse_news_page(url)
                 self.news.append({
-                    "id": str(idx),
                     "url": url,
                     "title": title,
                     "content": content,

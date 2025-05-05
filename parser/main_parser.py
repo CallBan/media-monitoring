@@ -17,9 +17,22 @@ class Main:
         giga_chat_api = os.getenv('API_KEY')
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
-        options = Options()
-        #options.add_argument("--headless")
-        driver = webdriver.Chrome(options=options)
+        chrome_options = Options()
+        # chrome_options.add_argument("--headless")
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        chrome_options.add_argument('--enable-unsafe-webgpu')
+        chrome_options.add_argument('--use-angle=swiftshader')
+        chrome_options.add_argument('--enable-features=SwiftShader')
+        chrome_options.add_argument('--ignore-gpu-blocklist')
+        chrome_options.add_argument('--disable-software-rasterizer')
+        chrome_options.add_argument('--disable-extensions')
+        chrome_options.add_argument('--disable-setuid-sandbox')
+        chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')  
+    
+        driver = webdriver.Chrome(options=chrome_options)
 
         try:
             if ' to ' in date_range:
@@ -37,7 +50,8 @@ class Main:
             today = datetime.today().date()
             self.date_start = self.date_end = today
 
-        symbols = re.compile(r'[,.!?\s]+')  # можно добавить другие символы и пробел
+        # можно добавить другие символы и пробел
+        symbols = re.compile(r'[,.!?\s]+')
 
         words = re.split(symbols, keywords)
         words = [word for word in words if word]
@@ -53,7 +67,10 @@ class Main:
             self.bank = class_parser(url, driver, date_range=(
                 self.date_start, self.date_end), pattern=pattern_key_words)
             self.news_pages.extend(self.bank.news_page())
-            driver.quit()
+        driver.quit()
+
+        for id, news in enumerate(self.news_pages, 1):
+            news['id'] = id
 
         self.__print_news_tittles()
 
