@@ -20,13 +20,14 @@ months = {
 today = datetime.today()
 yesterday = today - timedelta(days=1)
 
-
+DATE_RANGE = ["2025-04-20", "2025-04-28"]
 class RIAParser:
     def __init__(self, url, driver, date_range, pattern=None):
         self.url = url
         self.driver = driver
         self.TIMEOUT = 0.1
         self.date_start, self.date_end = date_range
+        self.window = None
 
         self.pattern_key_words = None
 
@@ -66,12 +67,27 @@ class RIAParser:
             print(f"Ошибка парсинга даты: {date_str} - {e}")
         return None
 
-    def __extract_news_items(self, html: str) -> List[Dict]:
+    def __extract_news_items(self, html: str, flag_parse_all = False) -> List[Dict]:
+
+        # Скользящее окно по html
+        if not flag_parse_all and self.window is not None:
+            html_len = len(html)
+            html = html[self.window:]
+            self.window = html_len
+
+        if self.window is None:
+            self.window = len(html)
         """Извлекает новости из HTML"""
         soup = BeautifulSoup(html, 'html.parser')
         items = soup.find_all('div', class_='list-item')
         extracted = []
         idx = 1
+        if flag_parse_all:
+            print("Парсим все")
+            items = items
+        else:
+            print("Берем с конца")
+            items = items[-1]
 
         for item in items:
             date_div = item.find('div', {'data-type': 'date'})
@@ -141,8 +157,12 @@ class RIAParser:
             time.sleep(SCROLL_PAUSE_TIME)
 
             if scroll_count % PARSE_INTERVAL == 0:
-                new_items, continue_loading = self.__extract_news_items(self.driver.page_source)
-                self.news.extend(new_items)
+                _, continue_loading = self.__extract_news_items(self.driver.page_source)
+
+        new_items, _ = self.__extract_news_items(self.driver.page_source, True)
+        self.news.extend(new_items)
+
+
 
     def __run(self):
         """Основной метод запуска парсера"""
@@ -181,3 +201,11 @@ class RIAParser:
                 print(f"{e}")
         return self.news
 
+# if __name__ == "__main__":
+#     url = "https://ria.ru/economy/"
+#     driver = webdriver.Chrome()
+#     parser = RIAParser(url=url, date_range=DATE_RANGE, driver=driver)
+#     result = parser.run()
+#     print(f"Найдено новостей: {len(result)}")
+#     for item in result:  # Выводим первые 5 для примера
+#         print(item)
