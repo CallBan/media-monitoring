@@ -1,4 +1,4 @@
-from parser.parsers import ria_news, banki_ru_news, rbk_news
+from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news
 
 
 def get_sources():
@@ -8,7 +8,9 @@ def get_sources():
         {'id': 'banki-ru', 'url': 'https://www.banki.ru/news/lenta/', 'name': 'Banki.ru',
          'class_link': banki_ru_news.BankiRuParser},
         {'id': 'rbk', 'url': 'https://www.rbc.ru/finances/', 'name': 'РБК',
-         'class_link': rbk_news.RBKParser}
+         'class_link': rbk_news.RBKParser},
+        {'id': 'kommersant', 'url': 'https://www.kommersant.ru/rubric/3?from=burger', 'name': 'Коммерсантъ',
+         'class_link': komersant_news.KomersantParser}
     ]
 
 

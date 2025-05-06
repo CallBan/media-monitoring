@@ -70,7 +70,7 @@ class KomersantParser:
             extracted.append({
                 "url": url,
                 "title": title,
-                "date_publication": str(article_datetime),
+                "date_publication": str(article_datetime.date()),
                 "content": None,
             })
 

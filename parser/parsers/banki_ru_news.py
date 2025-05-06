@@ -92,13 +92,13 @@ class BankiRuParser:
         # Извлекаем строку вида "Дата публикации: 20.04.2025 06:00"
         date_raw = self.driver.find_element(
             By.XPATH, "//span[@data-test = 'news-date-published']").text.strip()
-
+        print("Нашли что то", date_raw)
         # Удаляем префикс и преобразуем в datetime
         date_str = date_raw.replace("Дата публикации: ", "")
-        date_publication = datetime.strptime(date_str, "%d.%m.%Y")
-
+        date_publication = datetime.strptime(date_str, '%d.%m.%Y %H:%M')
         content = '\n'.join([p.text.strip()
                             for p in self.driver.find_elements(By.TAG_NAME, 'p')])
+        print(content)
         return title, content, date_publication
 
     def news_page(self):
@@ -106,6 +106,7 @@ class BankiRuParser:
         for url in news_urls:
             try:
                 title, content, date_publication = self.parse_news_page(url)
+                print(title, content[:50], date_publication, end="--------------------------------------", sep = '\n')
                 self.news.append({
                     "url": url,
                     "title": title,
@@ -118,3 +119,16 @@ class BankiRuParser:
                 continue
 
         return self.news
+
+# if __name__ == "__main__":
+#     url = "https://www.kommersant.ru/rubric/3?from=burger"
+#     driver = webdriver.Chrome()
+#     date_start = datetime.strptime(
+#         DATE_RANGE[0].strip(), "%Y-%m-%d").date()
+#     date_end = datetime.strptime(
+#         DATE_RANGE[1].strip(), "%Y-%m-%d").date()
+#     parser = KomersantParser(url=url, date_range=(date_start, date_end), driver=driver)
+#     result = parser.news_page()
+#     print(f"Найдено новостей: {len(result)}")
+#     for item in result:  # Выводим первые 5 для примера
+#         print(item)

@@ -20,7 +20,7 @@ months = {
 today = datetime.today()
 yesterday = today - timedelta(days=1)
 
-DATE_RANGE = ["2025-04-20", "2025-04-28"]
+DATE_RANGE = ["2025-04-15", "2025-05-06"]
 class RIAParser:
     def __init__(self, url, driver, date_range, pattern=None):
         self.url = url
@@ -35,7 +35,7 @@ class RIAParser:
             self.pattern_key_words = pattern
         print(self.pattern_key_words)
         self.news: List[Dict] = []
-        self.processed_urls = set()
+        # self.processed_urls = set()
         self.session = requests.Session()  # Используем сессию для повторных запросов
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -68,7 +68,10 @@ class RIAParser:
         return None
 
     def __extract_news_items(self, html: str, flag_parse_all = False) -> List[Dict]:
-
+        if flag_parse_all:
+            processed_urls = set() # МНОЖЕСТВО ++++++++++++++++++++++++++++++++++++
+        else:
+            processed_urls = None
         # Скользящее окно по html
         if not flag_parse_all and self.window is not None:
             html_len = len(html)
@@ -81,13 +84,6 @@ class RIAParser:
         soup = BeautifulSoup(html, 'html.parser')
         items = soup.find_all('div', class_='list-item')
         extracted = []
-        idx = 1
-        if flag_parse_all:
-            print("Парсим все")
-            items = items
-        else:
-            print("Берем с конца")
-            items = items[-1]
 
         for item in items:
             date_div = item.find('div', {'data-type': 'date'})
@@ -97,10 +93,11 @@ class RIAParser:
                 continue
 
             url = links[1].get('href')
-            if url in self.processed_urls:
+            if flag_parse_all and type(processed_urls) is set and url in processed_urls:
                 continue
 
             date_str = date_div.text.strip()
+
             article_date, time_hour_min = self.__parse_date(date_str)
 
             if article_date < self.date_start:
@@ -123,14 +120,14 @@ class RIAParser:
                     continue
 
             extracted.append({
-                "id": str(idx),
                 "url": url,
                 "title": title,
-                "date_publication": article_date.strftime('%Y-%m-%d') + ", " + time_hour_min,
+                "date_publication": str(article_date.strftime('%Y-%m-%d')),
                 "content": None,
             })
-            self.processed_urls.add(url)
-            idx += 1
+            if flag_parse_all:
+                processed_urls.add(url)
+
 
         return extracted, True  # while продолжает работать
 
@@ -204,7 +201,11 @@ class RIAParser:
 # if __name__ == "__main__":
 #     url = "https://ria.ru/economy/"
 #     driver = webdriver.Chrome()
-#     parser = RIAParser(url=url, date_range=DATE_RANGE, driver=driver)
+#     date_start = datetime.strptime(
+#         DATE_RANGE[0].strip(), "%Y-%m-%d").date()
+#     date_end = datetime.strptime(
+#         DATE_RANGE[1].strip(), "%Y-%m-%d").date()
+#     parser = RIAParser(url=url, date_range = (date_start, date_end), driver=driver)
 #     result = parser.run()
 #     print(f"Найдено новостей: {len(result)}")
 #     for item in result:  # Выводим первые 5 для примера
