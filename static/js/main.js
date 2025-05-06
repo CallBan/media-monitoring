@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!datePicker.input.value.trim()) {
       dateRangeError.style.display = "block";
       isValid = false;
-    } 
+    }
 
     if (!isValid) {
       e.preventDefault();
@@ -43,7 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     loader.classList.remove("loader-hidden");
-    console.log('hahaha')
+
+    const resultsContainer = document.getElementById("results");
+    resultsContainer.innerHTML = "";
   });
 
   // Сброс ошибок при изменении полей

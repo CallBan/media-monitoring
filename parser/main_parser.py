@@ -23,7 +23,6 @@ class Main:
         # chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(options=chrome_options)
 
-
         try:
             if ' to ' in date_range:
                 start_str, end_str = date_range.split(' to ')
@@ -59,8 +58,8 @@ class Main:
             self.news_pages.extend(self.bank.news_page())
         driver.quit()
 
-        for id, news in enumerate(self.news_pages, 1):
-            news['id'] = id
+        for idx in range(len(self.news_pages)):
+            self.news_pages[idx]['id'] = idx + 1
 
         self.__print_news_tittles()
 
@@ -88,6 +87,7 @@ class Main:
                     item['content']) > 150 else item['content']
                 new_one['Источник'] = 'banki.ru'
                 new_one['Ссылка'] = item['url']
+                print(new_one)
                 mask_news.append(new_one)
 
         return excel_generation.ExcelGeneration(mask_news).generate()

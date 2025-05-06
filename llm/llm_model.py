@@ -14,9 +14,10 @@ class GigaChatApi:
 
     def take_answer(self, text_page):
         start = time.time()
+        limit = min(5000, len(text_page))
         prompt = f"""
                 Ты должен сделать небольшое summary по прочитанному тексту
-                Вот текст: {text_page}
+                Вот текст: {text_page[:limit]}
                 """
         messages = [
             SystemMessage(
