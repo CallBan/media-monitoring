@@ -15,6 +15,7 @@ class BankiRuParser:
         self.TIMEOUT = 0.2
         self.news = []
         self.date_start, self.date_end = date_range
+        self.source_name = "Banki.ru"
 
         self.pattern_lenta = re.compile(r'/news/lenta/\?id')
         self.pattern_key_words = pattern
@@ -111,7 +112,8 @@ class BankiRuParser:
                     "url": url,
                     "title": title,
                     "content": content,
-                    "date_publication": date_publication
+                    "date_publication": date_publication,
+                    "source": self.source_name
                 })
 
             except Exception as e:

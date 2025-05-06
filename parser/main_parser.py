@@ -60,7 +60,7 @@ class Main:
         driver.quit()
 
         for id, news in enumerate(self.news_pages, 1):
-            news['id'] = id
+            news['id'] = str(id)
 
         self.__print_news_tittles()
 
@@ -74,11 +74,12 @@ class Main:
             print(f"URL: {item['url']}")
             print(f"Текст: {item['content'][:200]}...")
             print(f"Дата публикации: {item['date_publication']}")
+            print(f"Источник: {item['source']}")
 
     def export_to_excel(self, mask):
         mask_news = []
 
-        for item in self.news_pages[:5]:
+        for item in self.news_pages:
             new_one = {}
             if item['id'] in mask:
                 new_one['Дата публикации'] = item['date_publication']
@@ -86,7 +87,7 @@ class Main:
                 """Подкрутили LLM для summary"""
                 new_one['Краткая суть'] = self.giga.take_answer(item['content']) if len(
                     item['content']) > 150 else item['content']
-                new_one['Источник'] = 'banki.ru'
+                new_one['Источник'] = item['source']
                 new_one['Ссылка'] = item['url']
                 mask_news.append(new_one)
 

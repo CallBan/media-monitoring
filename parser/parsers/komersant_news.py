@@ -21,7 +21,7 @@ class KomersantParser:
         self.date_start, self.date_end = date_range
         self.window = None
         self.pattern_key_words = pattern
-        print(self.pattern_key_words)
+        self.source_name = "КоммерсантЪ"
 
         self.news: List[Dict] = []
         self.processed_urls = set()
@@ -72,6 +72,7 @@ class KomersantParser:
                 "title": title,
                 "date_publication": str(article_datetime.date()),
                 "content": None,
+                "source": self.source_name
             })
 
             self.processed_urls.add(url)

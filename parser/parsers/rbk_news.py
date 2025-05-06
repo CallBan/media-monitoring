@@ -14,7 +14,7 @@ class RBKParser:
         self.TIMEOUT = 1
         self.news = []
         self.date_start, self.date_end = date_range
-
+        self.source_name = "РБК"
         self.pattern_link = re.compile(
             r'https://www\.rbc\.ru/finances/(\d{2})/(\d{2})/(\d{4})/.*')
         self.pattern_key_words = pattern
@@ -68,7 +68,8 @@ class RBKParser:
                     "url": url,
                     "title": title,
                     "content": content,
-                    "date_publication": date_publication
+                    "date_publication": date_publication,
+                    "source": self.source_name
                 })
 
             except Exception as e:

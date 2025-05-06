@@ -27,6 +27,7 @@ class RIAParser:
         self.driver = driver
         self.TIMEOUT = 0.1
         self.date_start, self.date_end = date_range
+        self.source_name = "РИА новости"
         self.window = None
 
         self.pattern_key_words = None
@@ -124,6 +125,7 @@ class RIAParser:
                 "title": title,
                 "date_publication": str(article_date.strftime('%Y-%m-%d')),
                 "content": None,
+                "source": self.source_name
             })
             if flag_parse_all:
                 processed_urls.add(url)
