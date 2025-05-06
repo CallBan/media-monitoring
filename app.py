@@ -28,7 +28,7 @@ def search():
 
 @app.route('/export', methods=['POST'])
 def export():
-    selected_news = request.form.getlist("selected_news")
+    selected_news = list(map(int, request.form.getlist("selected_news")))
     print(selected_news)
     file = main.export_to_excel(selected_news)
     return send_file(
