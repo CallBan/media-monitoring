@@ -3,6 +3,7 @@ import time
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from selenium import webdriver
 
 
 class RBKParser:
@@ -25,18 +26,10 @@ class RBKParser:
         while flag_break:
             time.sleep(self.TIMEOUT)
             soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-            print('блять работает 1')
             news_blocks = soup.find_all('a', href=self.pattern_link)
-            print('блять работает 2')
-            news_links = []
-            for block in news_blocks:
-                try:
-                    news_links.append(block['href'])
-
-                except Exception as e:
-                    print(f"Ошибка в блоке: {e}")
+            news_links = [block['href'] for block in news_blocks]
             
-            last_date = self.get_date(self.pattern_link, news_links[-1])
+            last_date = min([self.get_date(self.pattern_link, link) for link in news_links])
 
             if last_date >= self.date_start:
                 self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -58,8 +51,8 @@ class RBKParser:
         title = soup.find('h1').text
 
         paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
-        tg_index = paragraphs.index('Читайте РБК вTelegram.')
-        content = ' '.join(paragraphs[:tg_index])
+        #tg_index = paragraphs.index('РБК в Telegram.')
+        content = ' '.join(paragraphs).split('РБК в Telegram')[0]
 
         date_publication = self.get_date(self.pattern_link, url)
         
@@ -92,29 +85,17 @@ class RBKParser:
 
 
 def main():
-    # url = 'https://www.rbc.ru/finances/'
-    # date_start, date_end = datetime(2025, 4, 20), datetime(2025, 5, 5)
+    url = 'https://www.rbc.ru/finances/'
+    date_start, date_end = datetime(2025, 5, 2).date(), datetime(2025, 5, 6).date()
 
-    # chrome_options = webdriver.ChromeOptions()
-    # chrome_options.add_argument('--no-sandbox')
-    # chrome_options.add_argument('--disable-dev-shm-usage')
-    # chrome_options.add_argument('--disable-gpu')
-    # chrome_options.add_argument('--enable-unsafe-webgpu')
-    # chrome_options.add_argument('--use-angle=swiftshader')
-    # chrome_options.add_argument('--enable-features=SwiftShader')
-    # chrome_options.add_argument('--ignore-gpu-blocklist')
-    # chrome_options.add_argument('--disable-software-rasterizer')
-    # chrome_options.add_argument('--disable-extensions')
-    # chrome_options.add_argument('--disable-setuid-sandbox')
-    # chrome_options.add_argument('user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36')  
-    # driver = webdriver.Chrome(options=chrome_options)
+    chrome_options = webdriver.ChromeOptions()
+    driver = webdriver.Chrome(options=chrome_options)
 
-    # parser = RBKParser(url=url, driver=driver,
-    #                    date_range=(date_start, date_end))
+    parser = RBKParser(url=url, driver=driver,
+                       date_range=(date_start, date_end))
     
-    # new = parser.parse_news_page('https://www.rbc.ru/finances/24/04/2025/6809a8b49a7947500db9177f')
-    # print(new)
-    pass
+    news = parser.news_page()
+    print(news)
 
 
 if __name__ == '__main__':
