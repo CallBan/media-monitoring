@@ -6,36 +6,27 @@ from datetime import datetime
 from selenium import webdriver
 
 
-class RBKParser:
+class LentaRuParser:
     def __init__(self, url, driver, date_range, pattern=None):
         self.url = url
         self.driver = driver
         self.driver.get(url)
         self.TIMEOUT = 1
         self.news = []
+        self.source_name = "Lenta.ru"
         self.date_start, self.date_end = date_range
-        self.source_name = "РБК"
+        # https://lenta.ru/news/2025/05/05/muzh-sestry-buzovoy-sobralsya-izbavitsya-ot-zarubezhnoy-kvartiry/
         self.pattern_link = re.compile(
-            r'https://www\.rbc\.ru/finances/(\d{2})/(\d{2})/(\d{4})/.*')
+            r'/news/(\d{4})/(\d{2})/(\d{2})/.*')
         self.pattern_key_words = pattern
 
 
     def __urls_list(self):
         """Получает все ссылки на новости в данном диапазоне дат"""
-        flag_break = True
-        while flag_break:
-            time.sleep(self.TIMEOUT)
-            soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-            news_blocks = soup.find_all('a', href=self.pattern_link)
-            news_links = [block['href'] for block in news_blocks]
-            
-            last_date = min([self.get_date(self.pattern_link, link) for link in news_links])
-
-            if last_date >= self.date_start:
-                self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            else:
-                flag_break = False
-
+        time.sleep(self.TIMEOUT)
+        soup = BeautifulSoup(self.driver.page_source, 'html.parser')
+        news_blocks = soup.find_all('a', href=self.pattern_link)
+        news_links = ['https://lenta.ru' + block['href'] for block in news_blocks]        
         filtered_links = []       
         for link in news_links:
             if self.date_start <= self.get_date(self.pattern_link, link) <= self.date_end:
@@ -51,7 +42,7 @@ class RBKParser:
         title = soup.find('h1').text
 
         paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
-        content = ' '.join(paragraphs).split('РБК в Telegram')[0]
+        content = ' '.join(paragraphs)
 
         date_publication = self.get_date(self.pattern_link, url)
         
@@ -83,18 +74,18 @@ class RBKParser:
     @staticmethod
     def get_date(pattern, url):
         match = re.search(pattern, url)
-        day, month, year = int(match.group(1)), int(match.group(2)), int(match.group(3))     
+        year, month, day = int(match.group(1)), int(match.group(2)), int(match.group(3))     
         return datetime(year, month, day).date()
 
 
 def main():
-    url = 'https://www.rbc.ru/finances/'
+    url = 'https://lenta.ru/rubrics/economics/'
     date_start, date_end = datetime(2025, 5, 2).date(), datetime(2025, 5, 6).date()
 
     chrome_options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(options=chrome_options)
 
-    parser = RBKParser(url=url, driver=driver,
+    parser = LentaRuParser(url=url, driver=driver,
                        date_range=(date_start, date_end))
     
     news = parser.news_page()

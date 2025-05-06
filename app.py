@@ -18,7 +18,6 @@ def index():
 def search():
     global main
     keywords = request.form.get("keywords")
-    print(keywords)
     sources = request.form.getlist("sources")
     date_range = request.form.get("date_range")
     main = Main(sources=sources, keywords=keywords, date_range=date_range)
@@ -29,7 +28,6 @@ def search():
 @app.route('/export', methods=['POST'])
 def export():
     selected_news = list(map(int, request.form.getlist("selected_news")))
-    print(selected_news)
     file = main.export_to_excel(selected_news)
     return send_file(
         file,
