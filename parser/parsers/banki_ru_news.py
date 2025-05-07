@@ -104,7 +104,7 @@ class BankiRuParser:
 
     def news_page(self):
         news_urls = self.urls_list()
-        for url in news_urls:
+        for url in news_urls[:3]:
             try:
                 title, content, date_publication = self.parse_news_page(url)
                 print(title, content[:50], date_publication, end="--------------------------------------", sep = '\n')

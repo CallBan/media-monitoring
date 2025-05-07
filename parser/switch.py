@@ -1,4 +1,4 @@
-from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news
+from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news, tass_news
 
 
 def get_sources():
@@ -12,7 +12,9 @@ def get_sources():
         {'id': 'kommersant', 'url': 'https://www.kommersant.ru/rubric/3?from=burger', 'name': 'Коммерсантъ',
          'class_link': komersant_news.KomersantParser},
         {'id': 'lenta-ru', 'url': 'https://lenta.ru/rubrics/economics/', 'name': 'Lenta.ru',
-         'class_link': lenta_ru_news.LentaRuParser}
+         'class_link': lenta_ru_news.LentaRuParser},
+        {'id': 'tass', 'url': 'https://tass.ru/ekonomika', 'name': 'ТАСС',
+         'class_link': tass_news.TASSParser}
     ]
 
 

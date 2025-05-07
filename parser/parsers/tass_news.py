@@ -77,7 +77,7 @@ class TASSParser:
             print(url)
             article_datetime = self.parse_news_page(url, True)
             print(article_datetime)
-            if article_datetime < date_start:
+            if article_datetime < self.date_start:
                 return False  # Прекращаем обработку, если дата слишком ранняя
         else:
             for item in items:
@@ -90,10 +90,10 @@ class TASSParser:
                 #         continue
 
                 article_datetime, content = self.parse_news_page(url)
-                if article_datetime > date_end:
+                if article_datetime > self.date_end:
                     continue
 
-                if article_datetime < date_start:
+                if article_datetime < self.date_start:
                     break  # Прекращаем обработку, если дата слишком ранняя
 
 
@@ -153,20 +153,20 @@ class TASSParser:
         return self.news
 
 
-if __name__ == "__main__":
-    url = "https://tass.ru/ekonomika"
-    DATE_RANGE = ["2025-05-07", "2025-05-07"]
-    driver = webdriver.Chrome()
-    date_start = datetime.strptime(
-        DATE_RANGE[0].strip(), "%Y-%m-%d").date()
-    date_end = datetime.strptime(
-        DATE_RANGE[1].strip(), "%Y-%m-%d").date()
-    tass = TASSParser(url=url, driver=driver, date_range=(date_start, date_end))
-    new_items = tass.news_page()
-
-    for item in new_items:
-        print(f"Заголовок: {item['title']}")
-        print(f"URL: {item['url']}")
-        print(f"Текст: {item['content'][:200]}...")
-        print(f"Дата публикации: {item['date_publication']}")
-        print(f"Источник: {item['source']}")
+# if __name__ == "__main__":
+#     url = "https://tass.ru/ekonomika"
+#     DATE_RANGE = ["2025-05-07", "2025-05-07"]
+#     driver = webdriver.Chrome()
+#     date_start = datetime.strptime(
+#         DATE_RANGE[0].strip(), "%Y-%m-%d").date()
+#     date_end = datetime.strptime(
+#         DATE_RANGE[1].strip(), "%Y-%m-%d").date()
+#     tass = TASSParser(url=url, driver=driver, date_range=(date_start, date_end))
+#     new_items = tass.news_page()
+#
+#     for item in new_items:
+#         print(f"Заголовок: {item['title']}")
+#         print(f"URL: {item['url']}")
+#         print(f"Текст: {item['content'][:200]}...")
+#         print(f"Дата публикации: {item['date_publication']}")
+#         print(f"Источник: {item['source']}")

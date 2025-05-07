@@ -61,3 +61,13 @@ document.addEventListener("DOMContentLoaded", function () {
     loader.classList.add("loader-hidden");
   });
 });
+
+// Обработка сжатия списка документов
+function toggleSection(id) {
+  const section = document.getElementById("section-" + id);
+  if (section.style.display === "none") {
+    section.style.display = "block";
+  } else {
+    section.style.display = "none";
+  }
+}

@@ -182,3 +182,40 @@ h1 {
     transform: rotate(360deg);
   }
 }
+.accordion-container {
+  width: 100%; /* изменено с max-width */
+}
+
+.accordion-toggle {
+  display: block; /* добавлено */
+  flex-shrink: 0;
+  width: 100% !important;
+  background-color: #eee;
+  color: #333;
+  box-sizing: border-box;
+  font-weight: bold;
+  padding: 10px;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  position: relative; /* для возможных иконок */
+}
+
+.accordion-toggle:hover {
+  background-color: #ccc;
+}
+
+
+.accordion-content .list-group{
+  padding: 10px;
+  max-width: 100% !important; /* перебиваем возможные ограничения */
+  background-color: #f9f9f9;
+  border-left: 2px solid #ccc;
+  border-right: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 0 0 5px 5px;
+  overflow: hidden; /* для плавных анимаций */
+}
