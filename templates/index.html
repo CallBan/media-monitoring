@@ -87,7 +87,7 @@
     {% for source, items in news|groupby('source') %}
     <div class="accordion-group">
     <button class="accordion-toggle" type="button" onclick="toggleSection('{{ loop.index }}')">
-        {{ source }} ({{ items | length }} новостей)
+        {{ source }} (Кол-во новостей: {{ items | length }})
       </button>
       <div class="accordion-content" id="section-{{ loop.index }}" style="display: none;">
         <ul class="list-group">

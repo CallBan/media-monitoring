@@ -18,6 +18,7 @@ h1 {
   border-radius: 4px;
   margin: 20px 50px;
   display: inline-block;
+  width: 850px;
 }
 
 /* Общие стили для формы */
@@ -189,7 +190,7 @@ h1 {
 .accordion-toggle {
   display: block; /* добавлено */
   flex-shrink: 0;
-  width: 100% !important;
+  width: 850px;
   background-color: #eee;
   color: #333;
   box-sizing: border-box;
