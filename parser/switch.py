@@ -1,4 +1,4 @@
-from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news, tass_news, garant_ru_news, iz_ru_news
+from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news, tass_news, garant_ru_news, iz_ru_news, rg_ru_news
 
 
 def get_sources():
@@ -18,7 +18,9 @@ def get_sources():
         {'id': 'garant', 'url': 'https://www.garant.ru/news/', 'name': 'Гарант.ру',
          'class_link': garant_ru_news.GarantRuParser},
         {'id': 'iz-ru', 'url': 'https://iz.ru/rubric/ekonomika', 'name': 'Известия',
-         'class_link': iz_ru_news.IzRuParser}
+         'class_link': iz_ru_news.IzRuParser},
+        {'id': 'rg-ru', 'url': 'https://rg.ru/tema/ekonomika', 'name': 'RG.RU',
+         'class_link': rg_ru_news.RgRuParser}
     ]
 
 
