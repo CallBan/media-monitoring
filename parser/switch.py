@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news, tass_news, garant_ru_news, iz_ru_news, rg_ru_news
-=======
-from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news, tass_news, interfax_news
->>>>>>> pascha
-
+from parser.parsers import ria_news, banki_ru_news, rbk_news, komersant_news, lenta_ru_news, tass_news, garant_ru_news, iz_ru_news, rg_ru_news, interfax_news
 
 def get_sources():
     return [
