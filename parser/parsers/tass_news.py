@@ -19,7 +19,7 @@ MAX_WAIT_TIME = 20  # секунд
 
 SCROLL_PAUSE_TIME = 0.2
 PARSE_INTERVAL = 5  # Парсим каждые 5 скроллов
-BASE_URL = "https://tass.ru/ekonomika" # Не стал подтягивать со свича, т.к лишний цикл
+BASE_URL = "https://tass.ru/" # Не стал подтягивать со свича, т.к лишний цикл
 SOURCE_NAME = "ТАСС"
 
 today = datetime.today()
@@ -53,7 +53,7 @@ class TASSParser:
 
     def parse_news_page(self, url: str, flag_date = False):
         """Парсинг полного текста новости через requests и BeautifulSoup"""
-        response = requests.get("https://tass.ru/" + url)
+        response = requests.get(BASE_URL + url)
         soup = BeautifulSoup(response.text, 'html.parser')
         if flag_date:
             date_time = soup.find('div', class_ = 'PublishedMark_date__LG42P').text
@@ -85,9 +85,10 @@ class TASSParser:
                 if url in processed_urls:
                     continue
                 title = item.find("span").text
-                # if self.pattern_key_words:
-                #     if not re.search(self.pattern_key_words, title.lower()):
-                #         continue
+
+                if self.pattern_key_words:
+                    if not re.search(self.pattern_key_words, title.lower()):
+                        continue
 
                 article_datetime, content = self.parse_news_page(url)
                 if article_datetime > self.date_end:
@@ -98,7 +99,7 @@ class TASSParser:
 
 
                 extracted.append({
-                    "url": url,
+                    "url": BASE_URL + url,
                     "title": title,
                     "date_publication": str(article_datetime),
                     "content": content,
