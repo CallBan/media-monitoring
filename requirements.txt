@@ -1,0 +1,8 @@
+Flask
+selenium
+beautifulsoup4
+pandas
+openpyxl
+langchain-gigachat
+python-dotenv
+DateTime

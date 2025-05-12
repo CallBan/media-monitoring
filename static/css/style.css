@@ -190,7 +190,7 @@ h1 {
 .accordion-toggle {
   display: block; /* добавлено */
   flex-shrink: 0;
-  width: 850px;
+  width: 870px;
   background-color: #eee;
   color: #333;
   box-sizing: border-box;

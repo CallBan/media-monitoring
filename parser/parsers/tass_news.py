@@ -1,10 +1,7 @@
-from typing import List, Dict, Union
+from typing import List, Dict
 import re
-from datetime import datetime, timedelta
+from datetime import datetime
 from bs4 import BeautifulSoup
-from selenium.webdriver.common.by import By
-from selenium import webdriver
-import time
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import time

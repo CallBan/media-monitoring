@@ -19,7 +19,7 @@ def get_sources():
         {'id': 'iz-ru', 'url': 'https://iz.ru/rubric/ekonomika', 'name': 'Известия',
          'class_link': iz_ru_news.IzRuParser},
         {'id': 'rg-ru', 'url': 'https://rg.ru/tema/ekonomika', 'name': 'RG.RU',
-         'class_link': rg_ru_news.RgRuParser}
+         'class_link': rg_ru_news.RgRuParser},
         {'id': 'interfax', 'url': 'https://www.interfax.ru/business/', 'name': 'Интерфакс',
          'class_link': interfax_news.InterFaxParser}
     ]

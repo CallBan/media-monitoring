@@ -3,7 +3,6 @@ import re
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
-from selenium import webdriver
 import time
 import requests
 
