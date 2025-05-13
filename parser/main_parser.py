@@ -14,7 +14,7 @@ load_dotenv()
 
 class Main:
     def __init__(self, sources, date_range, keywords=None):
-        giga_chat_api = os.getenv('API_KEY')
+        giga_chat_api = os.getenv('API_GIGA_CHAT')
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
         options = Options()
@@ -24,7 +24,7 @@ class Main:
         options.add_argument('--user-agent=Mozilla/5.0...')
         options.add_argument('--no-sandbox')
         options.add_argument('--disable-dev-shm-usage')
-        
+
         driver = webdriver.Chrome(options=options)
 
         try:
