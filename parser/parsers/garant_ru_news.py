@@ -49,7 +49,6 @@ class GarantRuParser:
 
         filtered_links = []
         for link in news_links:
-            print(self.date_start, self.__get_date(link), self.date_end)
             if self.date_start <= self.__get_date(link) <= self.date_end:
                 filtered_links.append(link)
         return filtered_links
@@ -103,7 +102,7 @@ class GarantRuParser:
 def main():
     url = 'https://www.garant.ru/news/'
     date_start, date_end = datetime(
-        2025, 5, 2).date(), datetime(2025, 5, 6).date()
+        2025, 5, 12).date(), datetime(2025, 5, 13).date()
 
     chrome_options = webdriver.ChromeOptions()
     driver = webdriver.Chrome(options=chrome_options)

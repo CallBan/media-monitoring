@@ -1,6 +1,6 @@
 {% extends "layout.html" %} {% block content %}
 <h1>Мониторинг СМИ</h1>
-<div class="search-container">
+<div class="search-container body-item">
   <form
     id="searchForm"
     class="search-form"
@@ -79,50 +79,64 @@
   </form>
 </div>
 
-<div id="results">
+<div id="results" class="body-item">
   {% if news %}
-<h2 class="mt-4 text-white">Результаты поиска</h2>
-<form action="{{ url_for('export') }}" method="POST">
-  <div class="accordion-container">
-    {% for source, items in news|groupby('source') %}
-    <div class="accordion-group">
-    <button class="accordion-toggle" type="button" onclick="toggleSection('{{ loop.index }}')">
-        {{ source }} (Кол-во новостей: {{ items | length }})
-      </button>
-      <div class="accordion-content" id="section-{{ loop.index }}" style="display: none;">
-        <ul class="list-group">
-          {% for item in items %}
-          <li class="list-group-item">
-            <div class="checkbox-container">
-              <input
-                class="custom-checkbox"
-                type="checkbox"
-                id="news-{{ item.id }}"
-                name="selected_news"
-                value="{{ item.id }}"
-              />
-              <label for="news-{{ item.id }}"></label>
-            </div>
-            <div class="content-wrapper">
-              <h5><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></h5>
-              <span class="date-container"><strong>Дата:</strong> {{ item.date_publication }}</span>
-              <span class="date-container"><strong>Источник:</strong> {{ item.source }}</span>
-              <p>{{ item.content[:300] }}...</p>
-            </div>
-          </li>
-          {% endfor %}
-        </ul>
+  <h2 class="mt-4 text-white">Результаты поиска</h2>
+  <form action="{{ url_for('export') }}" method="POST">
+    <div class="accordion-container">
+      {% for source, items in news|groupby('source') %}
+      <div class="accordion-group">
+        <button
+          class="accordion-toggle"
+          type="button"
+          onclick="toggleSection('{{ loop.index }}')"
+        >
+          {{ source }} (Кол-во новостей: {{ items | length }})
+        </button>
+        <div
+          class="accordion-content"
+          id="section-{{ loop.index }}"
+          style="display: none"
+        >
+          <ul class="list-group">
+            {% for item in items %}
+            <li class="list-group-item">
+              <div class="checkbox-container">
+                <input
+                  class="custom-checkbox"
+                  type="checkbox"
+                  id="news-{{ item.id }}"
+                  name="selected_news"
+                  value="{{ item.id }}"
+                />
+                <label for="news-{{ item.id }}"></label>
+              </div>
+              <div class="content-wrapper">
+                <h5>
+                  <a href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+                </h5>
+                <span class="date-container"
+                  ><strong>Дата:</strong> {{ item.date_publication }}</span
+                >
+                <span class="date-container"
+                  ><strong>Источник:</strong> {{ item.source }}</span
+                >
+                <p>{{ item.content[:300] }}...</p>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
-  </div>
-  <div class="submit-container">
-    <button type="submit" class="submit-btn" name="action" value="export">
-      Экспортировать
-    </button>
-  </div>
-</form>
-{% endif %}
+    <div class="submit-container">
+      <button type="submit" class="submit-btn" name="action" value="export">
+        Экспортировать
+      </button>
+    </div>
+  </form>
+  {% endif %}
 </div>
 <div id="loader" class="loader-hidden">
   <div class="loader-spinner"></div>
