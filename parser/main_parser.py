@@ -14,7 +14,7 @@ load_dotenv()
 
 class Main:
     def __init__(self, sources, date_range, keywords=None):
-        giga_chat_api = os.getenv('API_GIGA_CHAT')
+        giga_chat_api = os.getenv('API_KEY')
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
         options = Options()
