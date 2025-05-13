@@ -17,11 +17,15 @@ class Main:
         giga_chat_api = os.getenv('API_KEY')
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
-        driver = webdriver.Chrome()
-
-        chrome_options = Options()
-        # chrome_options.add_argument("--headless")
-        driver = webdriver.Chrome(options=chrome_options)
+        options = Options()
+        options.add_argument('--headless=new')
+        options.add_argument('--disable-blink-features=AutomationControlled')
+        options.add_argument('--window-size=1920,1080')
+        options.add_argument('--user-agent=Mozilla/5.0...')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        
+        driver = webdriver.Chrome(options=options)
 
         try:
             if ' to ' in date_range:
@@ -57,7 +61,6 @@ class Main:
                 self.date_start, self.date_end), pattern=pattern_key_words)
             self.news_pages.extend(self.bank.news_page())
         driver.quit()
-
 
         for idx in range(len(self.news_pages)):
             self.news_pages[idx]['id'] = idx + 1

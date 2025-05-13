@@ -7,6 +7,10 @@ body {
   align-items: center;
 }
 
+.body-item {
+  width: 900px;
+}
+
 h1 {
   text-align: center;
 }
