@@ -14,12 +14,13 @@ load_dotenv()
 
 class Main:
     def __init__(self, sources, date_range, keywords=None):
-        giga_chat_api = os.getenv('API_KEY')
+        giga_chat_api = os.getenv('API_GIGA_CHAT')
         self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
-        driver = webdriver.Chrome()
-
         chrome_options = Options()
+        chrome_options.add_argument("--headless")  # обязательный флаг
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
         # chrome_options.add_argument("--headless")
         driver = webdriver.Chrome(options=chrome_options)
 
