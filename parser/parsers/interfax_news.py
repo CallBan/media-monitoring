@@ -115,6 +115,10 @@ class InterFaxParser:
                         title = h3_tag.get_text(strip=True)
                         date_str = time_tag.get("datetime")
 
+                        if self.pattern_key_words:
+                            if not re.search(self.pattern_key_words, title.lower()):
+                                continue
+
                         # Пропускаем дубли
                         if url in processed_urls:
                             continue
