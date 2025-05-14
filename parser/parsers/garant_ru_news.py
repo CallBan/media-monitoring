@@ -32,10 +32,10 @@ class GarantRuParser:
         while flag_break:
             time.sleep(self.TIMEOUT)
             soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-            last_block_date = soup.find_all('time')[-1].text
-            day, month_str, year, _ = last_block_date.split()
-            month = months[month_str]
-            last_date = datetime(year=int(year), month=int(month), day=int(day)).date()
+            last_block = soup.find_all(
+                'a', class_='title', href=self.pattern_link)[-1]
+            last_url = 'https://www.garant.ru' + last_block['href']
+            last_date = self.__get_date(last_url)
 
             if last_date >= self.date_start:
                 next_button = self.driver.find_element(
