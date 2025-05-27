@@ -51,7 +51,7 @@ class Main:
 
         escaped_words = [re.escape(word.lower()) for word in words]
         pattern_key_words = re.compile('|'.join(escaped_words))
-
+        print(pattern_key_words)
         self.news_pages = []
         for source in sources:
             url_class = switch(source)

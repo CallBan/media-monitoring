@@ -14,8 +14,8 @@ months = {
 }
 MAX_WAIT_TIME = 20  # секунд
 
-SCROLL_PAUSE_TIME = 0.2
-PARSE_INTERVAL = 5  # Парсим каждые 5 скроллов
+SCROLL_PAUSE_TIME = 0.5
+PARSE_INTERVAL = 10  # Парсим каждые 5 скроллов
 BASE_URL = "https://tass.ru/" # Не стал подтягивать со свича, т.к лишний цикл
 SOURCE_NAME = "ТАСС"
 
@@ -93,7 +93,6 @@ class TASSParser:
 
                 if article_datetime < self.date_start:
                     break  # Прекращаем обработку, если дата слишком ранняя
-
 
                 extracted.append({
                     "url": BASE_URL + url,

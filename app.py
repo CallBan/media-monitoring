@@ -1,3 +1,5 @@
+import re
+
 from flask import Flask, render_template, request, send_file
 from parser.main_parser import Main
 from parser.switch import get_sources
