@@ -7,7 +7,7 @@ from selenium.common.exceptions import WebDriverException
 
 
 class BankiRuParser:
-    def __init__(self, url, driver, date_range, pattern=None, count_pages=5):
+    def __init__(self, url, driver, date_range, pattern=None, count_pages=5, headers = None):
         self.url = url
         self.driver = driver
         self.count_pages = count_pages

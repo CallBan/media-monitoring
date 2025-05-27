@@ -13,9 +13,10 @@ today = datetime.today()
 yesterday = today - timedelta(days=1)
 
 class KomersantParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.TIMEOUT = 0.1
         self.date_start, self.date_end = date_range
         self.window = None

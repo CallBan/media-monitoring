@@ -13,10 +13,12 @@ months = {
 }
 
 
+
 class GarantRuParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.driver.get(url)
         self.TIMEOUT = 1
         self.news = []
@@ -55,15 +57,18 @@ class GarantRuParser:
 
     def __parse_news_page(self, url):
         """Парсит страницу новости"""
-        response = requests.get(url)
+        try:
+            response = requests.get(url, headers=self.headers)
 
-        soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-        title = soup.find('h1').text
-        content = soup.find('div', class_='page-content').text
-        date_publication = self.__get_date(url)
+            title = soup.find('h1').text
+            content = soup.find('div', class_='page-content').text
+            date_publication = self.__get_date(url)
 
-        return title, content, date_publication
+            return title, content, date_publication
+        except:
+            return None
 
     def news_page(self):
         news_urls = self.__urls_list()

@@ -7,9 +7,10 @@ from selenium import webdriver
 
 
 class LentaRuParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.driver.get(url)
         self.TIMEOUT = 1
         self.news = []
@@ -35,18 +36,21 @@ class LentaRuParser:
 
     def __parse_news_page(self, url):
         """Парсит страницу новости"""
-        response = requests.get(url)
+        try:
+            response = requests.get(url, headers=self.headers)
 
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        title = soup.find('h1').text
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-        paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
-        content = ' '.join(paragraphs)
+            title = soup.find('h1').text
 
-        date_publication = self.get_date(self.pattern_link, url)
-        
-        return title, content, date_publication
+            paragraphs = [p.get_text(strip=True) for p in soup.find_all('p')]
+            content = ' '.join(paragraphs)
+
+            date_publication = self.get_date(self.pattern_link, url)
+
+            return title, content, date_publication
+        except Exception:
+            return None
 
 
     def news_page(self):

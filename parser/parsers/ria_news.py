@@ -21,9 +21,10 @@ yesterday = today - timedelta(days=1)
 
 DATE_RANGE = ["2025-04-15", "2025-05-06"]
 class RIAParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.TIMEOUT = 0.1
         self.date_start, self.date_end = date_range
         self.source_name = "РИА новости"
@@ -172,7 +173,7 @@ class RIAParser:
     def __parse_news_page(self, url: str) -> tuple:
         """Парсинг полного текста новости через requests и BeautifulSoup"""
         try:
-            response = self.session.get(url)
+            response = self.session.get(url, headers=self.headers)
             response.raise_for_status()  # Проверяем успешность запроса
             soup = BeautifulSoup(response.text, 'html.parser')
 

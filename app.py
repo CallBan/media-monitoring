@@ -22,11 +22,37 @@ def search():
     keywords = request.form.get("keywords")
     sources = request.form.getlist("sources")
     date_range = request.form.get("date_range")
-    main = Main(sources=sources, keywords=keywords, date_range=date_range)
-    news = main.get_list_news()
-    clear_news = [item for item in news if item is not None] if news else []
 
-    return render_template("index.html", news_sources=NEWS_SOURCES, news=clear_news)
+    # Инициализация основного класса
+    main = Main(sources=sources, keywords=keywords, date_range=date_range)
+
+    # Получаем новости
+    news_pages = main.get_list_news()
+
+    # Очищаем и предобрабатываем данные
+    clear_news = []
+    for item in news_pages:
+        if not item:  # Пропускаем None-элементы
+            continue
+
+        try:
+            preprocess_item = {
+                'id': item.get('id', ''),  # Используем get() для безопасного доступа
+                'title': item.get('title', 'Без заголовка'),
+                'url': item.get('url', '#'),
+                'content': item.get('content', '')[:300],  # Обрезаем контент
+                'date_publication': item.get('date_publication', 'Дата не указана'),
+                'source': item.get('source', 'Неизвестный источник')
+            }
+            clear_news.append(preprocess_item)
+
+        except Exception as e:
+            print(f"Ошибка обработки элемента: {e}")
+            continue
+
+    return render_template("index.html",
+                           news_sources=NEWS_SOURCES,
+                           news=clear_news if clear_news else None)
 
 
 @app.route('/export', methods=['POST'])

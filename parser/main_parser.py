@@ -11,14 +11,17 @@ import os
 
 load_dotenv()
 
+headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
 
 class Main:
     def __init__(self, sources, date_range, keywords=None):
-        # giga_chat_api = os.getenv('API_KEY')
+        giga_chat_api = os.getenv('API_KEY')
         # with open("key.txt", mode='r') as file:
         #     giga_chat_api = file.readline()
         # print(giga_chat_api)
-        self.giga = llm_model.GigaChatApi(api="NDgyZGU1MTktZDZkNC00NTc0LTk2NTMtOWIwZDNlMjhjZDE5OmEzZmIzYzdiLWM0YjEtNDk3My1iOGExLTgyYTZkYWUwMjY0Nw==")
+        self.giga = llm_model.GigaChatApi(api=giga_chat_api)
 
         options = Options()
         options.add_argument('--headless=new')
@@ -61,7 +64,7 @@ class Main:
             url, class_parser = url_class['url'], url_class['class_link']
 
             self.bank = class_parser(url, driver, date_range=(
-                self.date_start, self.date_end), pattern=pattern_key_words)
+                self.date_start, self.date_end), pattern=pattern_key_words, headers = headers)
             self.news_pages.extend(self.bank.news_page())
         driver.quit()
 

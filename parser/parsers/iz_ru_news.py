@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 
 
 class IzRuParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
         self.driver.get(url)

@@ -23,9 +23,10 @@ yesterday = today - timedelta(days=1)
 
 DATE_RANGE = ["2025-05-09", "2025-05-10"]
 class InterFaxParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.TIMEOUT = 0.1
         self.MAX_WAIT_TIME = 20
         self.date_start, self.date_end = date_range
@@ -194,7 +195,7 @@ class InterFaxParser:
     def __parse_news_page(self, url: str):
         """Парсинг полного текста новости через requests и BeautifulSoup"""
         try:
-            response = requests.get(url, headers={'Accept-Charset': 'utf-8'})
+            response = requests.get(url, headers=self.headers)
             response.encoding = response.apparent_encoding  # Замена кодировки для текста страницы
             soup = BeautifulSoup(response.text, 'html.parser')
             # Извлекаем основной текст

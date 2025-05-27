@@ -24,9 +24,10 @@ year_today = today.year
 
 class TASSParser:
 
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.driver.get(url)
         self.date_start, self.date_end = date_range
         self.window = None
@@ -50,17 +51,20 @@ class TASSParser:
 
     def parse_news_page(self, url: str, flag_date = False):
         """Парсинг полного текста новости через requests и BeautifulSoup"""
-        response = requests.get(BASE_URL + url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        if flag_date:
-            date_time = soup.find('div', class_ = 'PublishedMark_date__LG42P').text
-            return TASSParser.get_date(date_time)
-        else:
-            all_p = soup.find_all("p", class_ = "Paragraph_paragraph__9WAFK")
-            content = "\n".join([p.get_text(strip=True) for p in all_p])
-            date_time = soup.find('div', class_='PublishedMark_date__LG42P').text
-            date = TASSParser.get_date(date_time)
-            return date, content
+        try:
+            response = requests.get(BASE_URL + url, headers=self.headers)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            if flag_date:
+                date_time = soup.find('div', class_ = 'PublishedMark_date__LG42P').text
+                return TASSParser.get_date(date_time)
+            else:
+                all_p = soup.find_all("p", class_ = "Paragraph_paragraph__9WAFK")
+                content = "\n".join([p.get_text(strip=True) for p in all_p])
+                date_time = soup.find('div', class_='PublishedMark_date__LG42P').text
+                date = TASSParser.get_date(date_time)
+                return date, content
+        except Exception as e:
+            return None
 
 
     def extract_news_items(self, html: str, flag_parse_all = False):

@@ -8,9 +8,10 @@ from selenium.webdriver.common.by import By
 
 
 class RgRuParser:
-    def __init__(self, url, driver, date_range, pattern=None):
+    def __init__(self, url, driver, date_range, pattern=None, headers = None):
         self.url = url
         self.driver = driver
+        self.headers = headers
         self.driver.get(url)
         self.TIMEOUT = 0.2
         self.news = []
@@ -45,15 +46,18 @@ class RgRuParser:
 
     def __parse_news_page(self, url):
         """Парсит страницу новости"""
-        response = requests.get(url)
+        try:
+            response = requests.get(url, headers=self.headers)
 
-        soup = BeautifulSoup(response.text, 'html.parser')
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-        title = soup.find('h1').text
-        content = ' '.join([p.get_text(strip=True) for p in soup.find_all('p')])
-        date_publication = self.__get_date(self.pattern_link, url)
+            title = soup.find('h1').text
+            content = ' '.join([p.get_text(strip=True) for p in soup.find_all('p')])
+            date_publication = self.__get_date(self.pattern_link, url)
 
-        return title, content, date_publication
+            return title, content, date_publication
+        except:
+            return None
 
     def news_page(self):
         news_urls = self.__urls_list()
