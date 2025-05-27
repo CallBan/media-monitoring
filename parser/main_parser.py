@@ -15,10 +15,10 @@ load_dotenv()
 class Main:
     def __init__(self, sources, date_range, keywords=None):
         # giga_chat_api = os.getenv('API_KEY')
-        with open("key.txt", mode='r') as file:
-            giga_chat_api = file.readline()
-        print(giga_chat_api)
-        self.giga = llm_model.GigaChatApi(api=giga_chat_api)
+        # with open("key.txt", mode='r') as file:
+        #     giga_chat_api = file.readline()
+        # print(giga_chat_api)
+        self.giga = llm_model.GigaChatApi(api="NDgyZGU1MTktZDZkNC00NTc0LTk2NTMtOWIwZDNlMjhjZDE5OmEzZmIzYzdiLWM0YjEtNDk3My1iOGExLTgyYTZkYWUwMjY0Nw==")
 
         options = Options()
         options.add_argument('--headless=new')

@@ -4,4 +4,4 @@
 *.pyc
 .env
 .idea
-key.txt
+parser/key.txt
