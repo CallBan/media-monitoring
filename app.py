@@ -24,7 +24,9 @@ def search():
     date_range = request.form.get("date_range")
     main = Main(sources=sources, keywords=keywords, date_range=date_range)
     news = main.get_list_news()
-    return render_template("index.html", news_sources=NEWS_SOURCES, news=news)
+    clear_news = [item for item in news if item is not None] if news else []
+
+    return render_template("index.html", news_sources=NEWS_SOURCES, news=clear_news)
 
 
 @app.route('/export', methods=['POST'])

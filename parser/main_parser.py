@@ -74,20 +74,24 @@ class Main:
         return self.news_pages
 
     def __print_news_tittles(self):
-        for item in self.news_pages:
-            print(f"\nНовость #{item['id']}:")
-            print(f"Заголовок: {item['title']}")
-            print(f"URL: {item['url']}")
-            print(f"Текст: {item['content'][:200]}...")
-            print(f"Дата публикации: {item['date_publication']}")
-            print(f"Источник: {item['source']}")
+        try:
+            for item in self.news_pages:
+                print(f"\nНовость #{item['id']}:")
+                print(f"Заголовок: {item['title']}")
+                print(f"URL: {item['url']}")
+                print(f"Текст: {item['content'][:200]}...")
+                print(f"Дата публикации: {item['date_publication']}")
+                print(f"Источник: {item['source']}")
+        except Exception as e:
+            print(e, "Ловим None в content")
+
 
     def export_to_excel(self, mask):
         mask_news = []
 
         for item in self.news_pages:
             new_one = {}
-            if item['id'] in mask:
+            if item['id'] in mask and item['content'] is not None:
                 new_one['Дата публикации'] = item['date_publication']
                 new_one['Заголовок'] = item['title']
                 """Подкрутили LLM для summary"""
