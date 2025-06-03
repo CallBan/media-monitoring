@@ -55,12 +55,12 @@ class TASSParser:
             response = requests.get(BASE_URL + url, headers=self.headers)
             soup = BeautifulSoup(response.text, 'html.parser')
             if flag_date:
-                date_time = soup.find('div', class_ = 'PublishedMark_date__LG42P').text
+                date_time = soup.find('div', class_=lambda x: x and 'PublishedMark_date__' in x).text
                 return TASSParser.get_date(date_time)
             else:
-                all_p = soup.find_all("p", class_ = "Paragraph_paragraph__9WAFK")
+                all_p = soup.find_all("p", class_ = lambda x: x and "Paragraph_paragraph__" in x)
                 content = "\n".join([p.get_text(strip=True) for p in all_p])
-                date_time = soup.find('div', class_='PublishedMark_date__LG42P').text
+                date_time = soup.find('div', class_=lambda x: x and 'PublishedMark_date__' in x).text
                 date = TASSParser.get_date(date_time)
                 return date, content
         except Exception as e:
