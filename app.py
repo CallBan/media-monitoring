@@ -16,6 +16,7 @@ def index():
     return render_template('index.html', news_sources=NEWS_SOURCES, news=None)
 
 
+
 @app.route('/search', methods=['POST'])
 def search():
     global main
