@@ -1,15 +1,35 @@
 import re
 
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file, Response
 from parser.main_parser import Main
 from parser.switch import get_sources
-
+import asyncio
+from parser.set_value import shared_state
+import json
+import time
+from threading import Thread
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 NEWS_SOURCES = get_sources()
 main = None
 
+
+def run_async_task(coro):
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(coro)
+
+@app.route('/stream')
+def stream():
+    def event_gen():
+        while True:
+            data = shared_state.get_data()
+            json_data = json.dumps(data)  # Сериализуем словарь в JSON строку
+            yield f"data: {json_data}\n\n"  # Отправляем как корректный JSON
+            time.sleep(1)
+
+    return Response(event_gen(), mimetype="text/event-stream")
 
 @app.route('/', methods=['GET'])
 def index():
@@ -26,10 +46,11 @@ def search():
 
     # Инициализация основного класса
     main = Main(sources=sources, keywords=keywords, date_range=date_range)
-
+    p1 = Thread(target=run_async_task, args=(main.main_cycle(),), daemon=True)
+    p1.start()
+    p1.join()
     # Получаем новости
     news_pages = main.get_list_news()
-
     # Очищаем и предобрабатываем данные
     clear_news = []
     for item in news_pages:
@@ -70,3 +91,4 @@ def export():
 
 if __name__ == '__main__':
     app.run(debug=True)
+

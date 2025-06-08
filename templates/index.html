@@ -79,6 +79,13 @@
   </form>
 </div>
 
+    <div id="progress-container">
+        <div id="progress-bar">0%</div>
+    </div>
+    <p id="status">Ожидание данных...</p>
+
+
+
 <div id="results" class="body-item">
   {% if news %}
   <h2 class="mt-4 text-white">Результаты поиска</h2>
@@ -138,7 +145,5 @@
   </form>
   {% endif %}
 </div>
-<div id="loader" class="loader-hidden">
-  <div class="loader-spinner"></div>
-</div>
+
 {% endblock %}
